@@ -1,0 +1,76 @@
+\documentclass[spanish]{article}
+\def\spanishoptions{mexico}
+\usepackage[spanish]{babel}      % Para procesar adecuadamente el español
+\usepackage[utf8]{inputenc}      % Codificación de entrada UTF-8
+\usepackage[T1]{fontenc}         % Codificación de salida T1
+\usepackage[official]{eurosym}   % Símbolo de euro
+\usepackage{siunitx}             % Paquete para unidades métricas
+\usepackage{textcomp}            % Tipografías compañeras
+\usepackage{lmodern}             % Tipografía Latin Modern
+\usepackage{moreverb}            % Para escribir código
+\usepackage{tfrupee}
+\usepackage{fontawesome5}
+\usepackage{parskip}
+\usepackage{hyperref}
+\usepackage{tasks}
+\usepackage{exsheets}
+\usepackage{enumitem}
+\usepackage{lastpage}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{apalike}
+\usepackage{relsize}
+
+% Formato global:
+\setlength{\parindent}{0cm}      % Párrafos sin sangría inicial
+\hypersetup{pdfborder={0 0 0}}   % Ligas sin borde
+
+\begin {document}
+\title {Título}
+\author {Autor}
+\date {Fecha de hoy}
+\maketitle
+
+\section {Introducción}
+
+Breve recuento acerca de la teoría del tema actual \cite{fowler1998366}.
+
+
+
+
+\section {Cálculo en Python del tema actual}
+
+
+\subsection {Requisitos}
+
+\begin {itemize}
+\item Restricción del problema 1
+\item Restricción del problema 2
+\end {itemize}
+
+
+\subsection {Procedimiento}
+
+Breve explicación del Procedimiento
+
+
+\subsection {Respuestas}
+
+Respuestas de los ejercicios
+
+
+
+\clearpage
+\section*{Código Python}
+\begin{verbatim}
+#!/usr/bin/env python3
+
+# Adjuntar aquí el código de Python usado para resolver el ejercicio
+\end{verbatim}
+
+\bibliographystyle{apalike}
+% \bibliographystyle{inlinebib}
+\clearpage
+\bibliography{../bibliografias}
+
+\end{document}
