@@ -364,41 +364,446 @@ return {
 
 \section{Solución del problema}
 
+Una vez puesto el código anterior, la solución se obtiene llamando la función.
+
+\begin{lstlisting}
+df = cargar_limpiar_datos('listings.csv')
+resultado_base = resolver_problema(
+   df,
+   presupuesto=35000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Base"
+)
+
+\end{lstlisting}
 
 
 
 \section{Resultados encontrados en el conjunto de datos}
 
+\begin{itemize}
+   \item \textbf{Presupuesto de la solución óptima:} \$30,620.16
+   \item \textbf{Presupuesto meta:} \$35,000
+   \item \textbf{Desviación de la meta:} Ahorro de \$4,379.84
+   \item \textbf{Inmuebles seleccionados:} 12
+   \item \textbf{Capacidad total:} 50
+   \item \textbf{Calificación promedio:} 4.79
+\end{itemize}
+
+\subsection{Inmuebles elegidos}
+
+\begin{verbatim}
+  1. Renta de cuarto amueblado en Milpa Alta cdmx
+     URL: https://www.airbnb.com/rooms/35578561
+     Precio: $3,007/noche
+     Capacidad: 4 personas
+     Rating: 4.66
+
+  2. Casa de huéspedes con estacionamiento.
+     URL: https://www.airbnb.com/rooms/49040223
+     Precio: $2,972/noche
+     Capacidad: 4 personas
+     Rating: 4.73
+
+  3. cuarto privado con baño propio
+     URL: https://www.airbnb.com/rooms/700244472871184635
+     Precio: $2,661/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  4. Habitación privada
+     URL: https://www.airbnb.com/rooms/700244870655550205
+     Precio: $2,471/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  5. JC friend 1 Roma
+     URL: https://www.airbnb.com/rooms/1328379085023652183
+     Precio: $1,175/noche
+     Capacidad: 1 personas
+     Rating: 4.71
+
+  6. JC business 4 Roma
+     URL: https://www.airbnb.com/rooms/1329216692344341917
+     Precio: $1,140/noche
+     Capacidad: 1 personas
+     Rating: 4.67
+
+  7. JC enjoy 1 Roma
+     URL: https://www.airbnb.com/rooms/1330812883745588663
+     Precio: $1,175/noche
+     Capacidad: 1 personas
+     Rating: 4.50
+
+  8. Habitacion compartida condesa
+     URL: https://www.airbnb.com/rooms/1400162085582136087
+     Precio: $2,592/noche
+     Capacidad: 3 personas
+     Rating: 4.60
+
+  9. Habitacion hostal Condesa
+     URL: https://www.airbnb.com/rooms/1405211185835191585
+     Precio: $2,713/noche
+     Capacidad: 3 personas
+     Rating: 5.00
+
+  10. Hostal cerca de aeropuerto CDMX
+     URL: https://www.airbnb.com/rooms/1414017424828385623
+     Precio: $3,888/noche
+     Capacidad: 16 personas
+     Rating: 5.00
+
+  11. Habitacion Compartida
+     URL: https://www.airbnb.com/rooms/1466091791241188959
+     Precio: $2,782/noche
+     Capacidad: 3 personas
+     Rating: 4.67
+
+  12. Hab. Compartida Xoloitzcuintle Hasta 10 Personas
+     URL: https://www.airbnb.com/rooms/1471997961735268632
+     Precio: $4,044/noche
+     Capacidad: 10 personas
+     Rating: 5.00
+\end{verbatim}
 
 
 
 \section{Diferentes escenarios}
 
+Para evaluar los siguientes escenarios, basta con llamar la función con diferentes parámetros:
+
+
+\begin{lstlisting}
+df = cargar_limpiar_datos('listings.csv')
+
+resultado_austeridad = resolver_problema(
+   df,
+   presupuesto=20000,
+   propiedades=8,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Austeridad"
+)
+
+resultado_influencer = resolver_problema(
+   df,
+   presupuesto=35000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.8,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Influencer"
+)
+
+resultado_exigente = resolver_problema(
+   df,
+   presupuesto=35000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.7,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Exigente"
+)
+
+resultado_familia = resolver_problema(
+   df,
+   presupuesto=35000,
+   propiedades=3,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Unidos"
+)
+
+\end{lstlisting}
 
 \subsection{Escenario austero}
 
+\begin{itemize}
+   \item \textbf{Presupuesto de la solución óptima:} \$21,634.56
+   \item \textbf{Presupuesto meta:} \$20,000
+   \item \textbf{Desviación de la meta:} Exceso de \$1,634.56
+   \item \textbf{Inmuebles seleccionados:} 8
+   \item \textbf{Capacidad total:} 50
+   \item \textbf{Calificación promedio:} 4.69
+\end{itemize}
+
+\paragraph{Inmuebles seleccionados}
+
+\begin{verbatim}
+  1. Casa Mexico
+     URL: https://www.airbnb.com/rooms/16634977
+     Precio: $5,184/noche
+     Capacidad: 16 personas
+     Rating: 4.56
+
+  2. Casa de huéspedes con estacionamiento.
+     URL: https://www.airbnb.com/rooms/49040223
+     Precio: $2,972/noche
+     Capacidad: 4 personas
+     Rating: 4.73
+
+  3. JC friend 1 Roma
+     URL: https://www.airbnb.com/rooms/1328379085023652183
+     Precio: $1,175/noche
+     Capacidad: 1 personas
+     Rating: 4.71
+
+  4. JC business 4 Roma
+     URL: https://www.airbnb.com/rooms/1329216692344341917
+     Precio: $1,140/noche
+     Capacidad: 1 personas
+     Rating: 4.67
+
+  5. JC enjoy 1 Roma
+     URL: https://www.airbnb.com/rooms/1330812883745588663
+     Precio: $1,175/noche
+     Capacidad: 1 personas
+     Rating: 4.50
+
+  6. Hostal mixto
+     URL: https://www.airbnb.com/rooms/1359130315151355512
+     Precio: $3,508/noche
+     Capacidad: 8 personas
+     Rating: 4.71
+
+  7. Habitacion compartida condesa
+     URL: https://www.airbnb.com/rooms/1400162085582136087
+     Precio: $2,592/noche
+     Capacidad: 3 personas
+     Rating: 4.60
+
+  8. Hostal cerca de aeropuerto CDMX
+     URL: https://www.airbnb.com/rooms/1414017424828385623
+     Precio: $3,888/noche
+     Capacidad: 16 personas
+     Rating: 5.00
+\end{verbatim}
 
 \subsection{Escenario de influencer}
 
+\begin{itemize}
+   \item \textbf{Presupuesto de la solución óptima:} \$36,322.56
+   \item \textbf{Presupuesto meta:} \$35,000
+   \item \textbf{Desviación de la meta:} Exceso de \$1,322.56
+   \item \textbf{Inmuebles seleccionados:} 12
+   \item \textbf{Capacidad total:} 51
+   \item \textbf{Calificación promedio:} 4.97
+\end{itemize}
+
+\paragraph{Inmuebles seleccionados}
+
+\begin{verbatim}
+  ------------------------------------------------------------
+  INMUEBLES SELECCIONADOS -- Influencer
+  ------------------------------------------------------------
+
+  1. Linda habitación con terraza, en Vieja Casona,CDMX
+     URL: https://www.airbnb.com/rooms/39168471
+     Precio: $2,817/noche
+     Capacidad: 2 personas
+     Rating: 4.87
+
+  2. cuarto privado con baño propio
+     URL: https://www.airbnb.com/rooms/700244472871184635
+     Precio: $2,661/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  3. Habitación privada
+     URL: https://www.airbnb.com/rooms/700244870655550205
+     Precio: $2,471/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  4. Departamento agradable.
+     URL: https://www.airbnb.com/rooms/1083518894772654582
+     Precio: $2,765/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  5. Hostal en Casa Colonial Condesa
+     URL: https://www.airbnb.com/rooms/1297172957206163524
+     Precio: $2,799/noche
+     Capacidad: 3 personas
+     Rating: 5.00
+
+  6. Habitacion hostal Condesa
+     URL: https://www.airbnb.com/rooms/1405211185835191585
+     Precio: $2,713/noche
+     Capacidad: 3 personas
+     Rating: 5.00
+
+  7. Shared
+     URL: https://www.airbnb.com/rooms/1405929194473094359
+     Precio: $2,661/noche
+     Capacidad: 1 personas
+     Rating: 5.00
+
+  8. Hostal cerca de aeropuerto CDMX
+     URL: https://www.airbnb.com/rooms/1414017424828385623
+     Precio: $3,888/noche
+     Capacidad: 16 personas
+     Rating: 5.00
+
+  9. Hostel in CDMX close to Bellas Artes Femenino
+     URL: https://www.airbnb.com/rooms/1450290478323189423
+     Precio: $2,575/noche
+     Capacidad: 1 personas
+     Rating: 4.82
+
+  10. Habitación Compartida Jaguar Hasta 8 Personas
+     URL: https://www.airbnb.com/rooms/1458225604385118083
+     Precio: $4,199/noche
+     Capacidad: 8 personas
+     Rating: 5.00
+
+  11. Hab. Compartida Xoloitzcuintle Hasta 10 Personas
+     URL: https://www.airbnb.com/rooms/1471997961735268632
+     Precio: $4,044/noche
+     Capacidad: 10 personas
+     Rating: 5.00
+
+  12. Share Room Mexico City
+     URL: https://www.airbnb.com/rooms/1493139878911070729
+     Precio: $2,730/noche
+     Capacidad: 1 personas
+     Rating: 5.00
+\end{verbatim}
 
 \subsection{Escenario exigente}
 
+\begin{itemize}
+   \item \textbf{Presupuesto de la solución óptima:} \$42,353.28
+   \item \textbf{Presupuesto meta:} \$35,000
+   \item \textbf{Desviación de la meta:} Exceso de \$7,353.28
+   \item \textbf{Inmuebles seleccionados:} 12
+   \item \textbf{Capacidad total:} 50
+   \item \textbf{Calificación promedio:} 4.95
+\end{itemize}
 
-\subsection{Escenario familiar}
+\paragraph{Inmuebles seleccionados}
 
-
-\subsection{Escenario de cercanía}
-
-
-
-
-\clearpage
-\section*{Código Python}
 \begin{verbatim}
-#!/usr/bin/env python3
+  1. Xochimilco al mejor estilo, disfruta aquí.
+     URL: https://www.airbnb.com/rooms/33551076
+     Precio: $3,663/noche
+     Capacidad: 3 personas
+     Rating: 4.97
 
-# Adjuntar aquí el código de Python usado para resolver el ejercicio
+  2. Big Apartment CDMX Aeropuerto Foro Sol Big Groups
+     URL: https://www.airbnb.com/rooms/38391377
+     Precio: $7,741/noche
+     Capacidad: 16 personas
+     Rating: 4.77
+
+  3. Linda habitación con terraza, en Vieja Casona,CDMX
+     URL: https://www.airbnb.com/rooms/39168471
+     Precio: $2,817/noche
+     Capacidad: 2 personas
+     Rating: 4.87
+
+  4. Casárbol en el Ombligo dela Ciudad
+     URL: https://www.airbnb.com/rooms/41570454
+     Precio: $2,955/noche
+     Capacidad: 2 personas
+     Rating: 4.82
+
+  5. Habitación privada
+     URL: https://www.airbnb.com/rooms/700244870655550205
+     Precio: $2,471/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  6. Departamento agradable.
+     URL: https://www.airbnb.com/rooms/1083518894772654582
+     Precio: $2,765/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  7. Hostal en la Condesa en Amatlan
+     URL: https://www.airbnb.com/rooms/1297098649624205994
+     Precio: $3,041/noche
+     Capacidad: 3 personas
+     Rating: 5.00
+
+  8. Hostal hombres
+     URL: https://www.airbnb.com/rooms/1336907623021913355
+     Precio: $4,320/noche
+     Capacidad: 6 personas
+     Rating: 5.00
+
+  9. Habitacion hostal Condesa
+     URL: https://www.airbnb.com/rooms/1405211185835191585
+     Precio: $2,713/noche
+     Capacidad: 3 personas
+     Rating: 5.00
+
+  10. Shared
+     URL: https://www.airbnb.com/rooms/1405929194473094359
+     Precio: $2,661/noche
+     Capacidad: 1 personas
+     Rating: 5.00
+
+  11. Habitación compartida en Ciudad de México
+     URL: https://www.airbnb.com/rooms/1443073316324299360
+     Precio: $3,007/noche
+     Capacidad: 2 personas
+     Rating: 5.00
+
+  12. Habitación Compartida Jaguar Hasta 8 Personas
+     URL: https://www.airbnb.com/rooms/1458225604385118083
+     Precio: $4,199/noche
+     Capacidad: 8 personas
+     Rating: 5.00
 \end{verbatim}
+
+\subsection{Escenario de todos unidos}
+
+\begin{itemize}
+   \item \textbf{Presupuesto de la solución óptima:} \$16,623.36
+   \item \textbf{Presupuesto meta:} \$35,000
+   \item \textbf{Desviación de la meta:} Exceso de \$18,376.64
+   \item \textbf{Inmuebles seleccionados:} 4
+   \item \textbf{Capacidad total:} 50
+   \item \textbf{Calificación promedio:} 4.82
+\end{itemize}
+
+\paragraph{Inmuebles seleccionados}
+
+\begin{verbatim}
+  1. Casa Mexico
+     URL: https://www.airbnb.com/rooms/16634977
+     Precio: $5,184/noche
+     Capacidad: 16 personas
+     Rating: 4.56
+
+  2. Hostal mixto
+     URL: https://www.airbnb.com/rooms/1359130315151355512
+     Precio: $3,508/noche
+     Capacidad: 8 personas
+     Rating: 4.71
+
+  3. Hostal cerca de aeropuerto CDMX
+     URL: https://www.airbnb.com/rooms/1414017424828385623
+     Precio: $3,888/noche
+     Capacidad: 16 personas
+     Rating: 5.00
+
+  4. Hab. Compartida Xoloitzcuintle Hasta 10 Personas
+     URL: https://www.airbnb.com/rooms/1471997961735268632
+     Precio: $4,044/noche
+     Capacidad: 10 personas
+     Rating: 5.00
+\end{verbatim}
+
+
+
+
 
 \bibliographystyle{apalike}
 % \bibliographystyle{inlinebib}
