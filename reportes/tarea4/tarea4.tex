@@ -89,7 +89,7 @@ Sin embargo, algunos de sus requisitos resultan ser conflictivos, por lo que hay
 \item \textbf{Calidad:} Sólo aceptan lugares bien calificados.
 \end {enumerate}
 
-Para ello, vamos a construir un modelo de optimización que seleccione la combinación ideal de propiedades, cumpliendo los requisitos físicos (restricciones duras) y minimizando las desviaciones de las metas financieras (restricciones suaves).
+Para ello, vamos a construir un modelo de optimización que seleccione la combinación ideal de inmuebles, cumpliendo los requisitos físicos (restricciones duras) y minimizando las desviaciones de las metas financieras (restricciones suaves).
 
 
 
@@ -118,6 +118,98 @@ def cargar_limpiar_datos(path):
 
 
 \section{Planteamiento matemático}
+
+Una vez limpios los datos, el siguiente paso es plantear el modelo en la librería de Python llamada PULP, la cual es un resolvedor de problemas de programación lineal, para lo cual requerimos definir matemáticamente nuestro problema:
+
+\subsection{Restricciones}
+
+\paragraph{Restricciones suaves}
+
+\begin{itemize}
+   \item \textbf{Presupuesto:} El enunciado del problema establece que el cliente está dispuesto a asumir un cierto exceso en el presupuesto. Por lo que la restricción presupuestaria necesariamente \textbf{es una restricción suave.}
+\end{itemize}
+
+\paragraph{Restricciones duras}
+
+\begin{itemize}
+   \item \textbf{Capacidad:} Los inmuebles elegidos deben tener cupo para al menos 50 empleados.
+   \item \textbf{Cantidad de reservaciones}: Los inmuebles elegidos deben sumar no más de 12.
+   \item \textbf{Calidad:} Los inmuebles elegidos deben tener al menos 4.5 de calificación.
+\end{itemize}
+
+Todas ellas son restricciones duras que deben cumplirse obligatoriamente para poder entregar el paquete de reservaciones al cliente. Si no hay suficiente capacidad, no todos podrán hospedarse; si hay más de 12 reservaciones, será excesivamente difícil gestionarlas todas; y si la calificación es menor de 4.5, la experiencia para todos será decepcionante.
+
+
+\subsection{Variables}
+
+Nuestro problema se trata de \textbf{programación por metas,} por lo que nuestra función objetivo se construye a partir de la restricción suave, que es: el presupuesto por noche debe ser de preferencia no más de \$45,000 pesos (el presupuesto objetivo total, que es de \$70,000 pesos, entre 2 noches que van a durar los empleados en la Ciudad de México).
+
+Entonces, las variables que usaremos para el problema serán:
+
+\paragraph{Conjuntos e índices}
+\begin{description}
+   \item[I] El conjunto de todos los inmuebles candidatos.
+   \item[i] El índice de cada inmueble candidato. 
+\end{description}
+
+\paragraph{Variables de decisión}
+\begin{description}
+   \item[$x_i$] Para cada inmueble candidato, ¿fue elegido? 1 significa que sí fue elegido, 0 significa que no se eligió. El índice de todas las $x$ es uno por cada inmueble; si nuestro conjunto de datos es de 6000 inmuebles, será $\left\{ x_1, x_2, ..., x_{6000} \right\}$.
+\end{description}
+
+\paragraph{Parámetros} Se definen aquí los atributos de los inmuebles, con el fin de definir posteriormente las restricciones con base en ellos.
+\begin{description}
+   \item[$c_i$] Costo por noche de cada inmueble.
+   \item[$k_i$] Kapacidad de cada inmueble.
+   \item[$q_i$] Quality de cada inmueble.
+\end{description}
+
+\paragraph{Variables de desviación} Se definen por ser el problema de programación por metas.
+\begin{description}
+   \item[$d^+$] Exceso presupuestario.
+   \item[$d^-$] Subejercicio presupuestario.
+\end{description}
+
+\paragraph{Variables de penalización} El factor de penalización es un multiplicador constante que se añade a las variables de desviación, y tiene como propósito definir qué tan agresivamente debe nuestro método minimizar la variable de desviación. Un factor mayor que 1 hará que el método "vea" excesos más grandes, y por lo tanto, intente minimizar el resultado final de forma más agresiva; un factor menor que 1 hará que el método "vea" excesos menores, lo cual lo hará más permisivo al minimizar el exceso.
+\begin{description}
+   \item[$\rho$] Penalización del exceso presupuestario.
+\end{description}
+
+
+\subsection{Restricciones duras}
+
+Como lo hemos hecho en la programación lineal simple, nuestras restricciones duras aquí son desigualdades, pues éstas únicamente pueden cumplirse o incumplirse sin ningún margen intermedio:
+
+\begin{itemize}
+   \item \textbf{Capacidad:} Los inmuebles elegidos deben tener cupo para al menos 50 empleados.
+   \[
+      \sum_{i = 1}^{|I|} \left( k_i x_i \right) \ge 50
+   \]
+   \item \textbf{Cantidad de reservaciones}: Los inmuebles elegidos deben sumar no más de 12.
+   \[
+      \sum_{i = 1}^{|I|} \left( x_i \right) \le 12
+   \]
+   \item \textbf{Calidad:} Los inmuebles elegidos deben tener al menos 4.5 de calificación.
+   \[
+      q_i \ge 4.5
+   \]
+\end{itemize}
+
+
+\subsection{Restricción suave y función objetivo}
+
+\paragraph{Restricción suave} Conforme al enunciado del problema, nuestra restricción suave es que el presupuesto de preferencia debe ser no más de \$35,000 pesos por noche, pero hay espacio para exceder el presupuesto. Por lo tanto, nuestra restricción suave es:
+
+\[
+   \sum_{i = 1}^{|I|} \left( c_i x_i \right) + d^- - d^+ = 35,000
+\]
+
+\paragraph{Función objetivo} Queremos retendemos reducir el exceso $d^+$ todo lo que sea posible. Por lo tanto, nuestro problema es de \textbf{minimizar el exceso} y por lo tanto nuestra función objetivo es:
+
+\[
+   min \: Z = \sum_{i = 1}^{|I|} \left( c_i x_i \right) + d^- - d^+ = 35,000
+\]
+
 
 
 

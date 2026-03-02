@@ -1,17 +1,18 @@
 # Fdb version 4
-["bibtex tarea4"] 1772416591.30076 "tarea4.aux" "tarea4.bbl" "tarea4" 1772417226.67984 0
+["bibtex tarea4"] 1772420981.93612 "tarea4.aux" "tarea4.bbl" "tarea4" 1772421256.40699 0
   "../bibliografias.bib" 1772149086 2136 02398c35d476e8c6569eb79a39231cc9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/apalike.bst" 1291972791 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "tarea4.aux" 1772417225 2790 2a3798fe1fa83cdfdefccd06fd329ce2 "pdflatex"
+  "tarea4.aux" 1772421255 4239 b66ef757318a436745d144acb3c61414 "pdflatex"
   (generated)
   "tarea4.bbl"
   "tarea4.blg"
   (rewritten before read)
-["pdflatex"] 1772417224.94637 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772417226.68034 0
+["pdflatex"] 1772421254.81135 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772421256.40749 0
   "C:/Users/danuk/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1772296953 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/danuk/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1760669741 13235209 50184fe35b557ccbf5c7f87cd8f58912 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands0.enc" 1651500229 2920 d63721872b8c77041b88e51b8f7c291d ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1256929440 2375 baa924870cfb487815765f9094cf3728 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathex.enc" 1256929440 3486 c7eadf5dcc57b3b2d11736679f6636ba ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc" 1256929440 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc" 1256929440 2840 216e6e45ad352e2456e1149f28885bee ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc" 1256929440 2327 9d6df24f9c4f7368395224341a95523a ""
@@ -25,6 +26,7 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmr12.tfm" 1256929440 12092 7b1546e2d096cfd5dcbd4049b0b1ec2e ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmr17.tfm" 1256929440 12156 ca1ae6a3c8564e89597f1f993fba1608 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmr5.tfm" 1256929440 12020 46464c854bf317de2a7a0bbe4a1160ca ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmr7.tfm" 1256929440 12064 09aa3eeac96bf141d673bb1b0385ce55 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ec-lmtt10.tfm" 1256929440 1372 2ef2c2b492b3c4cd7879fe083abbb061 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/lmex10.tfm" 1256929440 992 ce925c9346c7613270a79afbee98c070 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/lmmi10.tfm" 1256929440 1528 6d36b2385e0ca062a654de6ac59cb34f ""
@@ -48,7 +50,9 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb" 1256929440 121021 836464b5fe0c782d94085eb083550ccc ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb" 1256929440 116908 9a7a12d1e4df280ea0ab4aad83cdef88 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx5.pfb" 1256929440 117046 013b52442f15bc2d34ae2f5a411c7c60 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmex10.pfb" 1256929440 23055 2e5b42921de910eaa97b85df04ca4891 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi10.pfb" 1256929440 30388 702fae6a5f0e6e9c48a1d872b442ffcf ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmmi7.pfb" 1256929440 30789 39c6b966e509dbc60e7a1aaaf85d08a0 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr10.pfb" 1256929440 119235 05e5c8d6d60439433e50047898c2c0e0 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr12.pfb" 1256929440 113634 9384aebdf26f9881e046a4b5574566db ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmr17.pfb" 1256929440 119752 1bd8d06e4079df624bf59ce3ad7c9aa6 ""
@@ -205,11 +209,11 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772417224 8058 4423dcc2e267cffb977acd03289cde7f ""
-  "tarea4.aux" 1772417225 2790 2a3798fe1fa83cdfdefccd06fd329ce2 "pdflatex"
-  "tarea4.bbl" 1772416591 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
-  "tarea4.out" 1772417225 2540 cfce6b64e14e113936bdf5ee3d808ca2 "pdflatex"
-  "tarea4.tex" 1772417224 8058 4423dcc2e267cffb977acd03289cde7f ""
+  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772421254 12976 e6e70c3d3240d6da4950a7f362f7ca21 ""
+  "tarea4.aux" 1772421255 4239 b66ef757318a436745d144acb3c61414 "pdflatex"
+  "tarea4.bbl" 1772420982 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
+  "tarea4.out" 1772421255 3178 fa087ed2f911ecd5d5df9eb73d4a962c "pdflatex"
+  "tarea4.tex" 1772421254 12976 e6e70c3d3240d6da4950a7f362f7ca21 ""
   (generated)
   "tarea4.aux"
   "tarea4.log"
