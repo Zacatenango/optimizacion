@@ -23,8 +23,10 @@
 \usepackage{listings}
 
 % Formato global:
-\setlength{\parindent}{0cm}      % Párrafos sin sangría inicial
-\hypersetup{pdfborder={0 0 0}}   % Ligas sin borde
+\setlength{\parindent}{0cm}       % Párrafos sin sangría inicial
+\hypersetup{pdfborder={0 0 0}}    % Ligas sin borde
+\lstset{language=python}          % Códigos por default en Python
+\lstset{basicstyle=\tiny} % 
 
 \begin {document}
 \title {Optimización convexa \\ Tarea 4: Programación por metas}
@@ -95,7 +97,23 @@ Para ello, vamos a construir un modelo de optimización que seleccione la combin
 
 La empresa \faAirbnb{} Airbnb pone a disposición del público un conjunto de datos en su portal Inside Airbnb \cite{airbnb2026} que muestra datos trimestrales al día de hoy actualizados al dís 27 de Septiembre de 2025. Dicho conjunto de datos consta de una gran cantidad de inmuebles que han sido listados en la plataforma, y contiene datos tales como la colonia donde se ubica, la calificación del inmueble, el cupo máximo, o el precio en pesos; con lo que el conjunto de datos tiene información suficiente para poder tomar una decisión.
 
-Sin embargo, antes de poder usarlo, es necesario limpiar el conjunto de datos. Esto se logra mediante el siguiente código:
+Sin embargo, antes de poder usarlo, es necesario limpiar el conjunto de datos: hay que convertir el texto que muestra el precio del inmueble y convertirlo a punto flotante, y tumbar aquellas columnas que no sean relevantes. Esto se logra mediante el siguiente código:
+
+\begin{lstlisting}
+import pandas
+import pulp
+import haversine
+
+def cargar_limpiar_datos(path):
+   dataframe = pandas.read_csv(path, on_bad_lines="skip")
+   dataframe["price"] = dataframe["price"].str.replace("$", "", regex=False)
+   dataframe["price"] = dataframe["price"].str.replace(",", "", regex=False)
+   dataframe["price"] = dataframe["price"].astype(float)
+   columnas_relevantes = [ "price", "accommodates", "review_scores_rating" ]
+   dataframe = dataframe.dropna(subset=columnas_relevantes)
+   dataframe = dataframe.reset_index(drop=True)
+\end{lstlisting}
+
 
 
 
