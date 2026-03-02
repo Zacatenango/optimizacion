@@ -227,29 +227,48 @@ Como lo hemos hecho en la programación lineal simple, nuestras restricciones du
 \paragraph{Función objetivo} Queremos retendemos reducir el exceso $d^+$ todo lo que sea posible. Por lo tanto, nuestro problema es de \textbf{minimizar el exceso} y por lo tanto nuestra función objetivo es:
 
 \[
-   min \: Z = \sum_{i = 1}^{|I|} \left( c_i x_i \right) + d^- - d^+ = 35,000
+   min \: Z = \sum_{i = 1}^{|I|} \left( c_i x_i \right) + d^- - d^+
 \]
 
 
 \subsection{Planteamiento del problema en PULP}
 
-Para resolver el problema con la librería PULP de Python, usaremos este código:
+Para resolver el problema con la librería PULP de Python, comenzaremos con una serie de pruebas de cordura:
 
 \begin{lstlisting}
-import pandas
-import pulp
-import haversine
+def resolver_problema(df, **kwargs):
+   meta_presupuesto = kwargs["presupuesto"]
+   max_propiedades = kwargs["propiedades"]
+   min_capacidad = kwargs["capacidad"]
+   min_calificacion = kwargs["calificacion"]
+   rho = kwargs["penalizacion_exceso_presupuesto"]
+   nombre = kwargs["nombre"]
+   
+   candidatos = df[ df["review_scores_rating"] >= min_calificacion ].copy()
 
-def cargar_limpiar_datos(path):
-   dataframe = pandas.read_csv(path, on_bad_lines="skip")
-   dataframe["price"] = dataframe["price"].str.replace("$", "", regex=False)
-   dataframe["price"] = dataframe["price"].str.replace(",", "", regex=False)
-   dataframe["price"] = dataframe["price"].astype(float)
-   columnas_relevantes = [ "price", "accommodates", "review_scores_rating" ]
-   dataframe = dataframe.dropna(subset=columnas_relevantes)
-   dataframe = dataframe.reset_index(drop=True)
+   if nombre == "Exigente":
+      for una_columna in columnas_detalles_calificacion:
+         candidatos = candidatos[ candidatos[una_columna] >= min_calificacion ]
+   
+   candidatos = candidatos.reset_index(drop=True)
+
+   if len(candidatos) == 0:
+      print("Nos quedamos sin inmuebles, no podemos proceder")
+      return None
+   elif candidatos["accommodates"].sum() < min_capacidad:
+      print("Nos quedamos sin suficientes inmuebles para alojar a todos")
+      return None
 \end{lstlisting}
 
+En esta función, luego de desempaquetar nuestros parámetros recibidos, aplicamos inmediatamente nuestra \textbf{restricción de calidad,} la cual podemos implementar como un simple filtro de PANDAS por ser una restricción que impera única y exclusivamente sobre la calificación de nuestros inmuebles. Adicionalmente, nuestro problema contempla un escenario adicional que es el \textit{escenario exigente,} en el cual nuestra restricción de calificación aplica a todos los componentes de la calificación y no sólo al promedio final; por lo que, si estamos en dicho escenario, aplicamos ese filtrado adicional.
+
+Posteriormente, hacemos unas pruebas rápidas de cordura: revisamos si todavía quedan inmuebles después de filtrarlos, y si la capacidad de todo el universo de inmuebles tiene todavía cupo para todos. Dichas pruebas de cordura nos permitirán determinar \textit{a priori} si nuestro problema es inviable con los datos que tenemos.
+
+Una vez implementado este pre-procesamiento, podemos pasar a plantear el problema, comenzando con nuestras variables:
+
+\begin{lstlisting}
+dsdsds
+\end{lstlisting}
 
 
 

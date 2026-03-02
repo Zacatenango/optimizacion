@@ -92,7 +92,15 @@ def resolver_problema(df, **kwargs):
    rho = 1  # rho = penalización del exceso presupuestario
 
    # Paso 2: función objetivo
-   
+   modelo = pulp.LpProblem("Tarea 4 - Escenario {nombre}", pulp.LpMinimize)
+   modelo += ( pulp.lpSum( c[i]*x[i] for i in I ) + (rho * exceso), "Función objetivo" )
+
+   # Paso 3: restricciones
+   modelo += ( pulp.lpSum( k[i]*x[i] for i in I) >= min_capacidad, "Capacidad mínima" )
+   modelo += ( pulp.lpSum( x[i] for i in I) >= max_propiedades, "Límite de reservaciones" )
+   modelo += ( pulp.lpSum( c[i]*x[i] for i in I) + deficit - exceso == meta_presupuesto, 
+               "Presupuesto")
+
 
 
 
