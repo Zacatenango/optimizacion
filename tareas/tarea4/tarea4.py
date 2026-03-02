@@ -120,9 +120,9 @@ def resolver_problema(df, **kwargs):
    z_optimo = pulp.value(modelo.objective)
 
    # Presentamos resultados
-   print(f"\n  {'─'*60}")
+   print(f"\n  {'-'*60}")
    print(f"  RESULTADOS")
-   print(f"  {'─'*60}")
+   print(f"  {'-'*60}")
    print(f"  Valor óptimo Z = ${z_optimo:,.2f}")
    print(f"  Costo total real = ${costo_total:,.2f}")
    print(f"  Presupuesto meta = ${meta_presupuesto:,.0f}")
@@ -132,9 +132,9 @@ def resolver_problema(df, **kwargs):
    print(f"  Capacidad total: {resultado_df['accommodates'].sum():.0f} personas")
    print(f"  Rating promedio: {resultado_df['review_scores_rating'].mean():.2f}")
    
-   print(f"\n  {'─'*60}")
+   print(f"\n  {'-'*60}")
    print(f"  INMUEBLES SELECCIONADOS")
-   print(f"  {'─'*60}")
+   print(f"  {'-'*60}")
    
    for indice, (_, row) in enumerate(resultado_df.iterrows(), 1):
       print(f"\n  {indice}. {row['name'][:60]}")
@@ -158,6 +158,76 @@ def resolver_problema(df, **kwargs):
       'candidatas': candidatos
    }
 
+
+# ======================================================================
+# ESCENARIO BASE
+# ======================================================================
+df = cargar_limpiar_datos('listings.csv')
+resultado_base = resolver_problema(
+   df,
+   presupuesto=70000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Base"
+)
+
+# ======================================================================
+# ESCENARIO 1: AUSTERIDAD
+# Presupuesto $40,000 MXN, máximo 8 casas
+# ======================================================================
+resultado_austeridad = resolver_problema(
+   df,
+   presupuesto=40000,
+   propiedades=8,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Austeridad"
+)
+
+# ======================================================================
+# ESCENARIO 2: INFLUENCER
+# Rating mínimo 4.8
+# ======================================================================
+resultado_influencer = resolver_problema(
+   df,
+   presupuesto=70000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.8,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Influencer"
+)
+
+# ======================================================================
+# ESCENARIO 3: EXIGENTE
+# Rating mínimo 4.7 en TODOS los aspectos
+# ======================================================================
+resultado_exigente = resolver_problema(
+   df,
+   presupuesto=70000,
+   propiedades=12,
+   capacidad=50,
+   calificacion=4.7,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Exigente"
+)
+
+# ======================================================================
+# ESCENARIO 4: UNIDOS COMO FAMILIA
+# Máximo 3 propiedades
+# ======================================================================
+resultado_familia = resolver_problema(
+   df,
+   presupuesto=70000,
+   propiedades=3,
+   capacidad=50,
+   calificacion=4.5,
+   penalizacion_exceso_presupuesto=2.0,
+   nombre="Unidos"
+)
 
 
 
