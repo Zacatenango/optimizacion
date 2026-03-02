@@ -26,6 +26,8 @@ def cargar_limpiar_datos(path):
    dataframe["price"] = dataframe["price"].str.replace("$", "", regex=False)
    dataframe["price"] = dataframe["price"].str.replace(",", "", regex=False)
    dataframe["price"] = dataframe["price"].astype(float)
+   # El precio parece estar en dólares, lo convertimos
+   dataframe["price"] = dataframe["price"] * 17.28
    
    # Tumbamos todos los registros que no tengan al menos los 3 esenciales:
    # precio, capacidad y calificación
@@ -121,7 +123,7 @@ def resolver_problema(df, **kwargs):
 
    # Presentamos resultados
    print(f"\n  {'-'*60}")
-   print(f"  RESULTADOS")
+   print(f"  RESULTADOS -- {nombre}")
    print(f"  {'-'*60}")
    print(f"  Valor óptimo Z = ${z_optimo:,.2f}")
    print(f"  Costo total real = ${costo_total:,.2f}")
@@ -133,13 +135,13 @@ def resolver_problema(df, **kwargs):
    print(f"  Rating promedio: {resultado_df['review_scores_rating'].mean():.2f}")
    
    print(f"\n  {'-'*60}")
-   print(f"  INMUEBLES SELECCIONADOS")
+   print(f"  INMUEBLES SELECCIONADOS -- {nombre}")
    print(f"  {'-'*60}")
    
    for indice, (_, row) in enumerate(resultado_df.iterrows(), 1):
       print(f"\n  {indice}. {row['name'][:60]}")
       print(f"     URL: {row['listing_url']}")
-      print(f"     Precio: ${row['precio']:,.0f} MXN/noche")
+      print(f"     Precio: ${row['price']:,.0f}/noche")
       print(f"     Capacidad: {row['accommodates']:.0f} personas")
       print(f"     Rating: {row['review_scores_rating']:.2f}")
    
@@ -165,7 +167,7 @@ def resolver_problema(df, **kwargs):
 df = cargar_limpiar_datos('listings.csv')
 resultado_base = resolver_problema(
    df,
-   presupuesto=70000,
+   presupuesto=35000,
    propiedades=12,
    capacidad=50,
    calificacion=4.5,
@@ -179,7 +181,7 @@ resultado_base = resolver_problema(
 # ======================================================================
 resultado_austeridad = resolver_problema(
    df,
-   presupuesto=40000,
+   presupuesto=20000,
    propiedades=8,
    capacidad=50,
    calificacion=4.5,
@@ -193,7 +195,7 @@ resultado_austeridad = resolver_problema(
 # ======================================================================
 resultado_influencer = resolver_problema(
    df,
-   presupuesto=70000,
+   presupuesto=35000,
    propiedades=12,
    capacidad=50,
    calificacion=4.8,
@@ -207,7 +209,7 @@ resultado_influencer = resolver_problema(
 # ======================================================================
 resultado_exigente = resolver_problema(
    df,
-   presupuesto=70000,
+   presupuesto=35000,
    propiedades=12,
    capacidad=50,
    calificacion=4.7,
@@ -221,7 +223,7 @@ resultado_exigente = resolver_problema(
 # ======================================================================
 resultado_familia = resolver_problema(
    df,
-   presupuesto=70000,
+   presupuesto=35000,
    propiedades=3,
    capacidad=50,
    calificacion=4.5,
