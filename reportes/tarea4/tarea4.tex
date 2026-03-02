@@ -267,8 +267,49 @@ Posteriormente, hacemos unas pruebas rápidas de cordura: revisamos si todavía 
 Una vez implementado este pre-procesamiento, podemos pasar a plantear el problema, comenzando con nuestras variables:
 
 \begin{lstlisting}
-dsdsds
+   I = range(len(candidatos))
+   x = pulp.LpVariable.dicts("x", I, cat="Binary")
+   c = candidatos["price"].values
+   k = candidatos["accommodates"].values
+   q = candidatos["review_scores_rating"].values
+   exceso = pulp.LpVariable("dmas", lowBound=0, cat="Continuous")
+   deficit = pulp.LpVariable("dmenos", lowBound=0, cat="Continuous")
+   rho = 1
 \end{lstlisting}
+
+A continuación, definimos nuestra función objetivo.
+
+\begin{lstlisting}
+   modelo = pulp.LpProblem("Tarea 4 - Escenario {nombre}", pulp.LpMinimize)
+   modelo += ( pulp.lpSum( c[i]*x[i] for i in I ) + (rho * exceso), "Funcion objetivo" )
+\end{lstlisting}
+
+Y luego definimos nuestras restricciones, incluyendo nnuestra restricción suave.
+
+\begin{lstlisting}
+   modelo += ( pulp.lpSum( k[i]*x[i] for i in I) >= min_capacidad, "Capacidad minima" )
+   modelo += ( pulp.lpSum( x[i] for i in I) >= max_propiedades, "Limite de reservaciones" )
+   modelo += ( pulp.lpSum( c[i]*x[i] for i in I) + deficit - exceso == meta_presupuesto, 
+               "Presupuesto")
+\end{lstlisting}
+
+Una vez definido lo anterior, podemos proceder a resolver nuestro modelo.
+
+\begin{lstlisting}
+   modelo.solve(pulp.PULP_CBC_CMD(msg=0))
+\end{lstlisting}
+
+A continuación, revisamos que el modelo haya sido resuelto, y en su caso, extraemos los resultados.
+
+\begin{lstlisting}
+   status = pulp.LpStatus[modelo.status]
+   print(f"Problema resuelto, status: {status}")
+   if status != "Optimal":
+      print("No se encontro solucion optima")
+      return None
+\end{lstlisting}
+
+
 
 
 

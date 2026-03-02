@@ -101,6 +101,62 @@ def resolver_problema(df, **kwargs):
    modelo += ( pulp.lpSum( c[i]*x[i] for i in I) + deficit - exceso == meta_presupuesto, 
                "Presupuesto")
 
+   # Ahora sí, resolvemos
+   modelo.solve(pulp.PULP_CBC_CMD(msg=0))
+   
+   # Revisamos si se resolvió el modelo
+   status = pulp.LpStatus[modelo.status]
+   print(f"Problema resuelto, status: {status}")
+   if status != "Optimal":
+      print("No se encontro solucion optima")
+      return None
+   
+   # Si sí, extraemos los resultados
+   seleccionados_indices = [i for i in I if x[i].varValue > 0.5]
+   resultado_df = candidatos.iloc[seleccionados_indices].copy()
+   costo_total = sum(c[i] * x[i].varValue for i in I)
+   exceso_resultante = exceso.varValue
+   deficit_resultante = deficit.varValue
+   z_optimo = pulp.value(modelo.objective)
+
+   # Presentamos resultados
+   print(f"\n  {'─'*60}")
+   print(f"  RESULTADOS")
+   print(f"  {'─'*60}")
+   print(f"  Valor óptimo Z = ${z_optimo:,.2f}")
+   print(f"  Costo total real = ${costo_total:,.2f}")
+   print(f"  Presupuesto meta = ${meta_presupuesto:,.0f}")
+   print(f"  Desviación positiva (d⁺, exceso) = ${exceso_resultante:,.2f}")
+   print(f"  Desviación negativa (d⁻, deficit) = ${deficit_resultante:,.2f}")
+   print(f"  Número de inmuebles seleccionados: {len(seleccionados_indices)}")
+   print(f"  Capacidad total: {resultado_df['accommodates'].sum():.0f} personas")
+   print(f"  Rating promedio: {resultado_df['review_scores_rating'].mean():.2f}")
+   
+   print(f"\n  {'─'*60}")
+   print(f"  INMUEBLES SELECCIONADOS")
+   print(f"  {'─'*60}")
+   
+   for indice, (_, row) in enumerate(resultado_df.iterrows(), 1):
+      print(f"\n  {indice}. {row['name'][:60]}")
+      print(f"     URL: {row['listing_url']}")
+      print(f"     Precio: ${row['precio']:,.0f} MXN/noche")
+      print(f"     Capacidad: {row['accommodates']:.0f} personas")
+      print(f"     Rating: {row['review_scores_rating']:.2f}")
+   
+   return {
+      'estado': status,
+      'z_optimo': z_optimo,
+      'costo_total': costo_total,
+      'presupuesto_meta': meta_presupuesto,
+      'd_plus': exceso_resultante,
+      'd_minus': deficit_resultante,
+      'num_propiedades': len(seleccionados_indices),
+      'capacidad_total': resultado_df['accommodates'].sum(),
+      'rating_promedio': resultado_df['review_scores_rating'].mean(),
+      'propiedades': resultado_df,
+      'modelo': modelo,
+      'candidatas': candidatos
+   }
 
 
 

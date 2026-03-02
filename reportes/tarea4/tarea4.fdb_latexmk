@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex tarea4"] 1772424207.40978 "tarea4.aux" "tarea4.bbl" "tarea4" 1772424851.35443 0
+["bibtex tarea4"] 1772425410.81438 "tarea4.aux" "tarea4.bbl" "tarea4" 1772426907.93462 0
   "../bibliografias.bib" 1772149086 2136 02398c35d476e8c6569eb79a39231cc9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/apalike.bst" 1291972791 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "tarea4.aux" 1772424850 4380 942c13b61763140f6dd2f1fcf59e23f0 "pdflatex"
+  "tarea4.aux" 1772426907 4380 942c13b61763140f6dd2f1fcf59e23f0 "pdflatex"
   (generated)
   "tarea4.bbl"
   "tarea4.blg"
   (rewritten before read)
-["pdflatex"] 1772424849.65928 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772424851.35492 0
+["pdflatex"] 1772426906.14394 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772426907.93515 0
   "C:/Users/danuk/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1772296953 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/danuk/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1760669741 13235209 50184fe35b557ccbf5c7f87cd8f58912 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands0.enc" 1651500229 2920 d63721872b8c77041b88e51b8f7c291d ""
@@ -214,11 +214,11 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772424849 15444 43cdcae0a8e5d39b06f82c1e8400a374 ""
-  "tarea4.aux" 1772424850 4380 942c13b61763140f6dd2f1fcf59e23f0 "pdflatex"
-  "tarea4.bbl" 1772424207 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
-  "tarea4.out" 1772424850 3418 69bdc6720ca284e3090e6d733941449f "pdflatex"
-  "tarea4.tex" 1772424849 15444 43cdcae0a8e5d39b06f82c1e8400a374 ""
+  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772426905 16982 9b3ee2ba11fea8e8569e31fd2d920422 ""
+  "tarea4.aux" 1772426907 4380 942c13b61763140f6dd2f1fcf59e23f0 "pdflatex"
+  "tarea4.bbl" 1772425411 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
+  "tarea4.out" 1772426907 3418 69bdc6720ca284e3090e6d733941449f "pdflatex"
+  "tarea4.tex" 1772426905 16982 9b3ee2ba11fea8e8569e31fd2d920422 ""
   (generated)
   "tarea4.aux"
   "tarea4.log"
