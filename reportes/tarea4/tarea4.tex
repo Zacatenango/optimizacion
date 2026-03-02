@@ -33,8 +33,44 @@
 
 \section {Introducción}
 
-Breve recuento acerca de la teoría del tema actual \cite{fowler1998366}.
+La \textbf{programación por metas} es un método especial de la programación lineal cuyo objetivo es encontrar la forma más óptima de reconciliar metas contradictorias o que de alguna forma compiten entre sí. Este método es especialmente atractivo para la vida real, pues con frecuencia ocurren situaciones donde las restricciones de un escenario son imposibles de cumplir en su totalidad.
 
+La idea principal detrás de este método consiste en \textbf{definir metas para los objetivos}, y posteriormente \textbf{minimizar la desviación respecto a esas metas.} Esto se hace convirtiendo nuestras restricciones en igualdades, y añadiendo 2 variables de desviación a nuestra función objetivo. Como ejemplo, si tenemos una restricción como la siguiente:
+
+\[
+   25x + 20y \le 5000
+\]
+
+Entonces convertimos nuestra desigualdad en igualdad y añadimos 2 variables adicionales, $d^-$ y $d^+$:
+
+\[
+   25x + 20y + d^- - d^+ = 5000
+\]
+
+donde $d^-$ y $d^+$ representan significativamente un \textbf{déficit} (qué tanto nuestra solución estará por debajo de la meta) y un \textbf{exceso} (qué tanto nuestra solución estará por encima de la meta), y su función matemática es absorber la diferencia entre lo que deseamos y lo que pudimos encontrar en la vida real. Dichas variables tienen 2 restricciones:
+
+\begin{itemize}
+   \item \textbf{Ambas variables deben ser positivas}, ya que no hay una sola variable que indique déficit o exceso, sino una para cada rubro.
+   \item \textbf{Sólo una puede ser mayor que 0 a la vez}, ya que es imposible tener déficit y exceso al mismo tiempo.
+\end{itemize}
+
+Esta conversión de desigualdad a igualdad con exceso y déficit la hacemos sobre la restricción que podamos identificar en nuestro problema como \textbf{restricción suave,} por motivo de que hay un cierto grado de libertad dependiente de la persona a la cual aplique el problema para tener déficit o superávit en el cumplimiento de nuestra meta. Como deseamos cumplir esa meta lo mejor posible, \textbf{a partir de esta meta será nuestra función objetivo,} de la siguiente forma, siguiendo el ejemplo de la ecuación anterior:
+
+\[
+   25x + 20y + \rho d^- - \tau d^+ = 5000
+\]
+
+donde $\rho$ y $\tau$ son \textbf{factores de penalización} para nuestro déficit y superávit que se determinan al momento de resolver el problema con el fin de establecer qué tan grave es el déficit y el superávit: entre más alto sea ese parámetro, la ejecución de la solución tenderá fuertemente a evitar incurrir en déficit o superávit.
+
+Y entonces, el problema consistirá en \textbf{minimizar lo que queremos evitar en nuestro problema}. Si nuestra meta suave es evitar incurrir en exceso, \textbf{minimizamos el exceso $d^+$}. Si nuestra meta suave es evitar el déficit, minimizamos el déficit $d^-$. Y si nuestra meta suave es ajustarnos lo más posible a un valor fijo, \textbf{minimizamos ambas variables.}
+
+Entonces, suponiendo que nuestro problema consiste en evitar exceder un presupuesto establecido, \textbf{nuestra función objetivo} es:
+
+\[
+   min \: Z = 25x + 20y + \rho d^+
+\]
+
+donde ya no figura la cantidad de 5000 ni el déficit $d^-$ por motivo de que dichas cantidades son parte de la meta, no de nuestro problema, el cual es minimizar el exceso en el cumplimiento de la meta.
 
 
 
