@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex tarea4"] 1772412893.91126 "tarea4.aux" "tarea4.bbl" "tarea4" 1772413312.62552 0
+["bibtex tarea4"] 1772414094.38909 "tarea4.aux" "tarea4.bbl" "tarea4" 1772414161.74297 0
   "../bibliografias.bib" 1772149086 2136 02398c35d476e8c6569eb79a39231cc9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/apalike.bst" 1291972791 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "tarea4.aux" 1772413312 2790 973037c56e258fe52605c3ca12276c07 "pdflatex"
+  "tarea4.aux" 1772414161 2790 973037c56e258fe52605c3ca12276c07 "pdflatex"
   (generated)
   "tarea4.bbl"
   "tarea4.blg"
   (rewritten before read)
-["pdflatex"] 1772413311.08391 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772413312.62598 0
+["pdflatex"] 1772414160.15666 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" "tarea4.pdf" "tarea4" 1772414161.74343 0
   "C:/Users/danuk/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1772296953 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/danuk/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1760669741 13235209 50184fe35b557ccbf5c7f87cd8f58912 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/fontawesome5/fa5brands0.enc" 1651500229 2920 d63721872b8c77041b88e51b8f7c291d ""
@@ -167,6 +167,10 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lastpage/lastpage.sty" 1755168308 2865 8ccb2521cf80bdb5bc6042e2df32d144 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lastpage/lastpage2e.sty" 1755168308 2716 b320fe74b8aadca5b2805ffb7b0f33c6 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lastpage/lastpagemodern.sty" 1755168308 9397 191b1ee46e1309b0f90d3f19218f6750 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.cfg" 1741168183 1865 301ae3c26fb8c0243307b619a6aa2dd3 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/listings/listings.sty" 1741168182 81640 997090b6c021dc4af9ee00a97b85c5b4 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstmisc.sty" 1741168182 77051 be68720e5402397a830abb9eed5a2cb4 ""
+  "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/listings/lstpatch.sty" 1741168182 353 9024412f43e92cd5b21fe9ded82d0610 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lm/lmodern.sty" 1430474546 1608 b00724785a9e9c599e5181bb8729160b ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lm/omllmm.fd" 1430474546 890 57f5adccd504fb5c98bdf99ed7e7f195 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/lm/omslmsy.fd" 1430474546 807 3de192f3efa968913bd2f096a7b430d8 ""
@@ -196,11 +200,11 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772413310 7185 daac70b6b6080d688d855f85bcbc756f ""
-  "tarea4.aux" 1772413312 2790 973037c56e258fe52605c3ca12276c07 "pdflatex"
-  "tarea4.bbl" 1772412894 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
-  "tarea4.out" 1772413312 2540 cfce6b64e14e113936bdf5ee3d808ca2 "pdflatex"
-  "tarea4.tex" 1772413310 7185 daac70b6b6080d688d855f85bcbc756f ""
+  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea4/tarea4.tex" 1772414159 7229 f2ac9e454eff79228916bc6af66f917e ""
+  "tarea4.aux" 1772414161 2790 973037c56e258fe52605c3ca12276c07 "pdflatex"
+  "tarea4.bbl" 1772414094 256 42c6618b2c9f88e1cb1f286510148dfc "bibtex tarea4"
+  "tarea4.out" 1772414161 2540 cfce6b64e14e113936bdf5ee3d808ca2 "pdflatex"
+  "tarea4.tex" 1772414159 7229 f2ac9e454eff79228916bc6af66f917e ""
   (generated)
   "tarea4.aux"
   "tarea4.log"
