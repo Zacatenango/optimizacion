@@ -102,16 +102,36 @@ Sin embargo, antes de poder usarlo, es necesario limpiar el conjunto de datos: h
 \begin{lstlisting}
 import pandas
 import pulp
-import haversine
+
+
+columnas_detalles_calificacion = \
+[
+   "review_scores_accuracy",
+   "review_scores_cleanliness",
+   "review_scores_checkin",
+   "review_scores_communication",
+   "review_scores_location",
+   "review_scores_value"
+]
+
 
 def cargar_limpiar_datos(path):
    dataframe = pandas.read_csv(path, on_bad_lines="skip")
+
    dataframe["price"] = dataframe["price"].str.replace("$", "", regex=False)
    dataframe["price"] = dataframe["price"].str.replace(",", "", regex=False)
    dataframe["price"] = dataframe["price"].astype(float)
-   columnas_relevantes = [ "price", "accommodates", "review_scores_rating" ]
+   
+   columnas_relevantes = \
+   [
+      "price",
+      "accommodates",
+      "review_scores_rating"
+   ]
    dataframe = dataframe.dropna(subset=columnas_relevantes)
+   
    dataframe = dataframe.reset_index(drop=True)
+   return dataframe
 \end{lstlisting}
 
 
