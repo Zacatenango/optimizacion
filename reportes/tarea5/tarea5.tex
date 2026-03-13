@@ -38,23 +38,14 @@
     backgroundcolor=\color{gray!5}
 }
 
-\hypersetup{
-    colorlinks=true,
-    linkcolor=blue,
-    urlcolor=blue,
-    citecolor=blue
-}
-
-
-
 % Formato global:
 \setlength{\parindent}{0cm}      % Párrafos sin sangría inicial
 \hypersetup{pdfborder={0 0 0}}   % Ligas sin borde
 
 \begin {document}
-\title {Título}
-\author {Autor}
-\date {Fecha de hoy}
+\title {Multivariable regression with OLS and ridge regularization}
+\author {Acoyani Garrido Sandoval}
+\date {March 12, 2026}
 \maketitle
 
 \section{Introduction}
@@ -134,7 +125,7 @@ The analysis was implemented in Python using NumPy for numerical computations. B
 
 Table \ref{tab:summary_stats} presents the descriptive statistics of the dataset.
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
     \caption{Descriptive Statistics of the Dataset}
     \label{tab:summary_stats}
@@ -155,7 +146,7 @@ Table \ref{tab:summary_stats} presents the descriptive statistics of the dataset
 
 The OLS regression yielded the following coefficients:
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
     \caption{OLS Regression Coefficients}
     \label{tab:ols_coef}
@@ -182,7 +173,7 @@ The OLS regression yielded the following coefficients:
 
 Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal $\lambda$ was found to be \textbf{2}, which minimizes the test RMSE.
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
     \caption{Ridge Regression Results at Selected $\lambda$ Values}
     \label{tab:ridge_results}
@@ -208,7 +199,7 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
 
 \subsection{Model Comparison}
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
     \caption{Comprehensive Model Comparison}
     \label{tab:comparison}
@@ -228,7 +219,7 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
 
 \subsection{Additional Metrics}
 
-\begin{table}[H]
+\begin{table}[h]
     \centering
     \caption{Additional Performance Metrics (Test Set)}
     \label{tab:additional_metrics}
@@ -246,14 +237,14 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
 
 \subsection{Visualizations}
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{regression_analysis_plots.png}
     \caption{Multiple Regression Analysis: (a) RMSE vs $\lambda$, (b) $R^2$ vs $\lambda$, (c) Coefficient paths, (d) Actual vs Predicted values}
     \label{fig:main_plots}
 \end{figure}
 
-\begin{figure}[H]
+\begin{figure}[h]
     \centering
     \includegraphics[width=\textwidth]{ridge_detailed_analysis.png}
     \caption{Detailed Ridge Analysis: (a) Bias-Variance Tradeoff, (b) Coefficient Shrinkage (L2 Norm vs $\lambda$)}
