@@ -17,7 +17,7 @@ print("MULTIPLE REGRESSION ANALYSIS: OLS vs RIDGE REGULARIZATION")
 print("=" * 70)
 
 # Load the data
-data = pd.read_csv('/mnt/user-data/uploads/Cabohydrate_Data.csv')
+data = pd.read_csv('Cabohydrate_Data.csv')
 
 print("\n1. DATA OVERVIEW")
 print("-" * 50)
@@ -121,10 +121,10 @@ print(f"  Training MAE:  {mae_train_ols:.4f}")
 print(f"  Test MAE:      {mae_test_ols:.4f}")
 
 # =============================================================================
-# 4. RIDGE REGRESSION WITH VARYING PENALTY (λ from 1 to 600)
+# 4. RIDGE REGRESSION WITH VARYING PENALTY (lambda from 1 to 600)
 # =============================================================================
 print("\n" + "=" * 70)
-print("4. RIDGE REGRESSION (λ from 1 to 600)")
+print("4. RIDGE REGRESSION (lambda from 1 to 600)")
 print("-" * 50)
 
 def ridge_regression_centered(X, y, y_mean, lambda_param):
@@ -133,7 +133,7 @@ def ridge_regression_centered(X, y, y_mean, lambda_param):
     Ridge penalizes coefficients but not the intercept.
     
     For standardized X and centered y:
-    β = (X^T X + λI)^(-1) X^T y
+    β = (X^T X + lambdaI)^(-1) X^T y
     Intercept = mean(y_original) (since X is standardized)
     """
     n_features = X.shape[1]
@@ -197,11 +197,11 @@ optimal_idx = results_df['rmse_test'].idxmin()
 optimal_lambda = results_df.loc[optimal_idx, 'lambda']
 optimal_rmse_test = results_df.loc[optimal_idx, 'rmse_test']
 
-print(f"Optimal λ (minimum test RMSE): {optimal_lambda}")
+print(f"Optimal lambda (minimum test RMSE): {optimal_lambda}")
 print(f"Minimum Test RMSE: {optimal_rmse_test:.4f}")
 
 # Display coefficients at optimal lambda (these are in standardized scale)
-print(f"\nRidge Coefficients at optimal λ = {optimal_lambda} (standardized scale):")
+print(f"\nRidge Coefficients at optimal lambda = {optimal_lambda} (standardized scale):")
 print(f"  β_age     = {results_df.loc[optimal_idx, 'beta_age']:.6f}")
 print(f"  β_weight  = {results_df.loc[optimal_idx, 'beta_weight']:.6f}")
 print(f"  β_protein = {results_df.loc[optimal_idx, 'beta_protein']:.6f}")
@@ -215,7 +215,7 @@ beta_ridge_opt = np.array([
 beta_original_scale = beta_ridge_opt / scaler.scale_
 intercept_ridge = y_mean - np.sum(beta_original_scale * scaler.mean_)
 
-print(f"\nRidge Coefficients at optimal λ = {optimal_lambda} (original scale):")
+print(f"\nRidge Coefficients at optimal lambda = {optimal_lambda} (original scale):")
 print(f"  Intercept = {intercept_ridge:.6f}")
 print(f"  β_age     = {beta_original_scale[0]:.6f}")
 print(f"  β_weight  = {beta_original_scale[1]:.6f}")
@@ -223,12 +223,12 @@ print(f"  β_protein = {beta_original_scale[2]:.6f}")
 
 # Show results at key lambda values
 print("\n" + "-" * 50)
-print("Ridge Results at Selected λ Values:")
+print("Ridge Results at Selected lambda Values:")
 print("-" * 50)
 key_lambdas = [1, 10, 50, 100, 200, 300, 400, 500, 600]
 for lam in key_lambdas:
     row = results_df[results_df['lambda'] == lam].iloc[0]
-    print(f"λ = {lam:3d}: RMSE_train = {row['rmse_train']:.4f}, "
+    print(f"lambda = {lam:3d}: RMSE_train = {row['rmse_train']:.4f}, "
           f"RMSE_test = {row['rmse_test']:.4f}, R²_test = {row['r2_test']:.4f}")
 
 # =============================================================================
@@ -240,7 +240,7 @@ print("-" * 50)
 
 print("\nMetric Comparison Table:")
 print("-" * 70)
-print(f"{'Metric':<15} {'OLS':<12} {'Ridge(λ=1)':<12} {'Ridge(λ=opt)':<12} {'Ridge(λ=100)':<12} {'Ridge(λ=600)':<12}")
+print(f"{'Metric':<15} {'OLS':<12} {'Ridge(lambda=1)':<12} {'Ridge(lambda=opt)':<12} {'Ridge(lambda=100)':<12} {'Ridge(lambda=600)':<12}")
 print("-" * 70)
 
 ridge_1_row = results_df[results_df['lambda'] == 1].iloc[0]
@@ -274,10 +274,10 @@ ax1.plot(results_df['lambda'], results_df['rmse_train'], 'b-', label='Train RMSE
 ax1.plot(results_df['lambda'], results_df['rmse_test'], 'r-', label='Test RMSE (Ridge)', linewidth=1.5)
 ax1.axhline(y=rmse_train_ols, color='blue', linestyle='--', alpha=0.7, label=f'OLS Train RMSE ({rmse_train_ols:.2f})')
 ax1.axhline(y=rmse_test_ols, color='red', linestyle='--', alpha=0.7, label=f'OLS Test RMSE ({rmse_test_ols:.2f})')
-ax1.axvline(x=optimal_lambda, color='green', linestyle=':', alpha=0.7, label=f'Optimal λ={optimal_lambda}')
-ax1.set_xlabel('Lambda (λ)', fontsize=11)
+ax1.axvline(x=optimal_lambda, color='green', linestyle=':', alpha=0.7, label=f'Optimal lambda={optimal_lambda}')
+ax1.set_xlabel('Lambda (lambda)', fontsize=11)
 ax1.set_ylabel('RMSE', fontsize=11)
-ax1.set_title('RMSE vs Regularization Parameter (λ)', fontsize=12)
+ax1.set_title('RMSE vs Regularization Parameter (lambda)', fontsize=12)
 ax1.legend(loc='best', fontsize=8)
 ax1.grid(True, alpha=0.3)
 ax1.set_ylim([4, 14])
@@ -288,10 +288,10 @@ ax2.plot(results_df['lambda'], results_df['r2_train'], 'b-', label='Train R² (R
 ax2.plot(results_df['lambda'], results_df['r2_test'], 'r-', label='Test R² (Ridge)', linewidth=1.5)
 ax2.axhline(y=r2_train_ols, color='blue', linestyle='--', alpha=0.7, label=f'OLS Train R² ({r2_train_ols:.3f})')
 ax2.axhline(y=r2_test_ols, color='red', linestyle='--', alpha=0.7, label=f'OLS Test R² ({r2_test_ols:.3f})')
-ax2.axvline(x=optimal_lambda, color='green', linestyle=':', alpha=0.7, label=f'Optimal λ={optimal_lambda}')
-ax2.set_xlabel('Lambda (λ)', fontsize=11)
+ax2.axvline(x=optimal_lambda, color='green', linestyle=':', alpha=0.7, label=f'Optimal lambda={optimal_lambda}')
+ax2.set_xlabel('Lambda (lambda)', fontsize=11)
 ax2.set_ylabel('R² Score', fontsize=11)
-ax2.set_title('R² Score vs Regularization Parameter (λ)', fontsize=12)
+ax2.set_title('R² Score vs Regularization Parameter (lambda)', fontsize=12)
 ax2.legend(loc='best', fontsize=8)
 ax2.grid(True, alpha=0.3)
 
@@ -301,8 +301,8 @@ ax3.plot(results_df['lambda'], results_df['beta_age'], 'b-', label='β_age', lin
 ax3.plot(results_df['lambda'], results_df['beta_weight'], 'r-', label='β_weight', linewidth=2)
 ax3.plot(results_df['lambda'], results_df['beta_protein'], 'g-', label='β_protein', linewidth=2)
 ax3.axhline(y=0, color='black', linestyle='-', alpha=0.3)
-ax3.axvline(x=optimal_lambda, color='purple', linestyle=':', alpha=0.7, label=f'Optimal λ={optimal_lambda}')
-ax3.set_xlabel('Lambda (λ)', fontsize=11)
+ax3.axvline(x=optimal_lambda, color='purple', linestyle=':', alpha=0.7, label=f'Optimal lambda={optimal_lambda}')
+ax3.set_xlabel('Lambda (lambda)', fontsize=11)
 ax3.set_ylabel('Coefficient Value (Standardized)', fontsize=11)
 ax3.set_title('Ridge Coefficient Paths', fontsize=12)
 ax3.legend(loc='best', fontsize=9)
@@ -317,7 +317,7 @@ ax4.scatter(y_test, y_test_pred_ols, alpha=0.6, c='blue', label='OLS', edgecolor
 # Ridge predictions at optimal lambda
 beta_ridge_optimal = ridge_regression_centered(X_train_scaled, y_train_centered, y_mean, optimal_lambda)
 y_test_pred_ridge = X_test_scaled @ beta_ridge_optimal + y_mean
-ax4.scatter(y_test, y_test_pred_ridge, alpha=0.6, c='red', label=f'Ridge (λ={optimal_lambda})', edgecolors='k', s=60, marker='s')
+ax4.scatter(y_test, y_test_pred_ridge, alpha=0.6, c='red', label=f'Ridge (lambda={optimal_lambda})', edgecolors='k', s=60, marker='s')
 
 # Perfect prediction line
 min_val = min(y_test.min(), y_test_pred_ols.min(), y_test_pred_ridge.min()) - 2
@@ -330,7 +330,7 @@ ax4.legend(loc='best', fontsize=9)
 ax4.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('/home/claude/regression_analysis_plots.png', dpi=150, bbox_inches='tight')
+plt.savefig('regression_analysis_plots.png', dpi=150, bbox_inches='tight')
 print("Main plots saved to 'regression_analysis_plots.png'")
 
 # Additional plot: Detailed comparison at different lambda values
@@ -347,8 +347,8 @@ ax_bv.fill_between(results_df['lambda'], train_errors, test_errors,
                    alpha=0.3, color='purple', label='Generalization Gap')
 ax_bv.plot(results_df['lambda'], train_errors, 'b-', label='Train RMSE', linewidth=1.5)
 ax_bv.plot(results_df['lambda'], test_errors, 'r-', label='Test RMSE', linewidth=1.5)
-ax_bv.axvline(x=optimal_lambda, color='green', linestyle=':', label=f'Optimal λ={optimal_lambda}')
-ax_bv.set_xlabel('Lambda (λ)', fontsize=11)
+ax_bv.axvline(x=optimal_lambda, color='green', linestyle=':', label=f'Optimal lambda={optimal_lambda}')
+ax_bv.set_xlabel('Lambda (lambda)', fontsize=11)
 ax_bv.set_ylabel('RMSE', fontsize=11)
 ax_bv.set_title('Bias-Variance Tradeoff Visualization', fontsize=12)
 ax_bv.legend(loc='best')
@@ -358,15 +358,15 @@ ax_bv.grid(True, alpha=0.3)
 ax_norm = axes2[1]
 beta_norms = np.sqrt(results_df['beta_age']**2 + results_df['beta_weight']**2 + results_df['beta_protein']**2)
 ax_norm.plot(results_df['lambda'], beta_norms, 'purple', linewidth=2)
-ax_norm.axvline(x=optimal_lambda, color='green', linestyle=':', label=f'Optimal λ={optimal_lambda}')
-ax_norm.set_xlabel('Lambda (λ)', fontsize=11)
+ax_norm.axvline(x=optimal_lambda, color='green', linestyle=':', label=f'Optimal lambda={optimal_lambda}')
+ax_norm.set_xlabel('Lambda (lambda)', fontsize=11)
 ax_norm.set_ylabel('||β||₂ (L2 Norm)', fontsize=11)
-ax_norm.set_title('Coefficient Shrinkage: L2 Norm vs λ', fontsize=12)
+ax_norm.set_title('Coefficient Shrinkage: L2 Norm vs lambda', fontsize=12)
 ax_norm.legend(loc='best')
 ax_norm.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('/home/claude/ridge_detailed_analysis.png', dpi=150, bbox_inches='tight')
+plt.savefig('ridge_detailed_analysis.png', dpi=150, bbox_inches='tight')
 print("Detailed analysis plots saved to 'ridge_detailed_analysis.png'")
 
 # =============================================================================
@@ -376,9 +376,9 @@ print("\n" + "=" * 70)
 print("7. COEFFICIENT SHRINKAGE ANALYSIS")
 print("-" * 50)
 
-print("\nCoefficient values at different λ (standardized scale):")
+print("\nCoefficient values at different lambda (standardized scale):")
 print("-" * 80)
-print(f"{'λ':<10} {'β_age':<15} {'β_weight':<15} {'β_protein':<15} {'||β||₂':<15}")
+print(f"{'lambda':<10} {'β_age':<15} {'β_weight':<15} {'β_protein':<15} {'||β||₂':<15}")
 print("-" * 80)
 
 for lam in [1, 5, 10, 25, 50, 100, 200, 300, 400, 500, 600]:
@@ -454,9 +454,9 @@ ANALYSIS SUMMARY:
    - Test RMSE: {rmse_test_ols:.4f}, Test R²: {r2_test_ols:.4f}
 
 3. RIDGE REGULARIZATION FINDINGS:
-   - Optimal λ = {optimal_lambda} (based on minimum test RMSE)
-   - At optimal λ: Test RMSE = {optimal_rmse_test:.4f}
-   - As λ increases from 1 to 600:
+   - Optimal lambda = {optimal_lambda} (based on minimum test RMSE)
+   - At optimal lambda: Test RMSE = {optimal_rmse_test:.4f}
+   - As lambda increases from 1 to 600:
      * All coefficients shrink toward zero monotonically
      * Training RMSE increases (more bias)
      * The gap between train and test RMSE narrows (less variance)
@@ -474,7 +474,7 @@ ANALYSIS SUMMARY:
 5. RECOMMENDATIONS:
    - For prediction: Use OLS as it provides better test performance
    - For interpretation: Coefficients indicate Age and Protein are key factors
-   - Consider: Cross-validation for more robust λ selection
+   - Consider: Cross-validation for more robust lambda selection
    - Note: The dataset shows good predictive relationships (R² ≈ {r2_test_ols:.2%})
 
 6. CLINICAL INTERPRETATION:
@@ -484,7 +484,7 @@ ANALYSIS SUMMARY:
 """)
 
 # Save all results to CSV
-results_df.to_csv('/home/claude/ridge_results_detailed.csv', index=False)
+results_df.to_csv('ridge_results_detailed.csv', index=False)
 print("\nDetailed Ridge results saved to 'ridge_results_detailed.csv'")
 
 # =============================================================================
@@ -495,7 +495,7 @@ print("10. FINAL SUMMARY TABLE")
 print("=" * 70)
 
 summary_table = pd.DataFrame({
-    'Model': ['OLS', f'Ridge (λ={optimal_lambda})', 'Ridge (λ=1)', 'Ridge (λ=100)', 'Ridge (λ=300)', 'Ridge (λ=600)'],
+    'Model': ['OLS', f'Ridge (lambda={optimal_lambda})', 'Ridge (lambda=1)', 'Ridge (lambda=100)', 'Ridge (lambda=300)', 'Ridge (lambda=600)'],
     'Train_RMSE': [rmse_train_ols, ridge_opt_row['rmse_train'], ridge_1_row['rmse_train'], 
                    ridge_100_row['rmse_train'], results_df[results_df['lambda']==300].iloc[0]['rmse_train'],
                    ridge_600_row['rmse_train']],
@@ -511,7 +511,7 @@ summary_table = pd.DataFrame({
 })
 
 print("\n" + summary_table.to_string(index=False))
-summary_table.to_csv('/home/claude/final_summary.csv', index=False)
+summary_table.to_csv('final_summary.csv', index=False)
 
 print("\n" + "=" * 70)
 print("ANALYSIS COMPLETE")
