@@ -12,10 +12,6 @@ np.random.seed(42)
 # =============================================================================
 # 1. DATA LOADING AND PREPROCESSING
 # =============================================================================
-print("=" * 70)
-print("MULTIPLE REGRESSION ANALYSIS: OLS vs RIDGE REGULARIZATION")
-print("=" * 70)
-
 # Load the data
 data = pd.read_csv('Cabohydrate_Data.csv')
 

@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1773371738.42289 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea5/tarea5.tex" "tarea5.pdf" "tarea5" 1773371740.04519 0
+["pdflatex"] 1773379260.73766 "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea5/tarea5.tex" "tarea5.pdf" "tarea5" 1773379262.38999 0
   "C:/Users/danuk/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1772296953 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/danuk/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1760669741 13235209 50184fe35b557ccbf5c7f87cd8f58912 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1256929440 2375 baa924870cfb487815765f9094cf3728 ""
@@ -218,12 +218,12 @@
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/danuk/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea5/tarea5.tex" 1773371737 15760 b920c3ba41ad3a92c877766c4ea348c0 ""
+  "c:/Users/danuk/Code/ITESO/maestria/semestre2/optimizacion/reportes/tarea5/tarea5.tex" 1773379258 15790 5fcb43739fc8318b3cf07a856e06b32f ""
   "regression_analysis_plots.png" 1773392648 302418 d1e74500baca73f9105f7eae354b5837 ""
   "ridge_detailed_analysis.png" 1773392648 122327 796c851f1c2a596ee569d72e262ef8ed ""
-  "tarea5.aux" 1773371739 5406 be07abb900800d7410bb5c75861cf381 "pdflatex"
-  "tarea5.out" 1773371739 3215 4493970574babb83da49e10e746fbbcb "pdflatex"
-  "tarea5.tex" 1773371737 15760 b920c3ba41ad3a92c877766c4ea348c0 ""
+  "tarea5.aux" 1773379262 5411 6c957c4515badd4f1f55c5c54588d626 "pdflatex"
+  "tarea5.out" 1773379262 3215 4493970574babb83da49e10e746fbbcb "pdflatex"
+  "tarea5.tex" 1773379258 15790 5fcb43739fc8318b3cf07a856e06b32f ""
   (generated)
   "tarea5.aux"
   "tarea5.log"

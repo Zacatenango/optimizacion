@@ -91,7 +91,7 @@ The objective is to predict the percentage of total calories obtained from compl
     \item \textbf{Protein} ($x_3$): Percentage of calories as protein
 \end{itemize}
 
-The problem specifies that carbohydrate is linearly related to age, relative weight, and protein without bias (though we include an intercept for proper modeling).
+The problem specifies that carbohydrate is related to age, relative weight, and protein without bias. For the purpose of this problem, we will assume a linear relationship. We do, however, include an intercept for proper modeling.
 
 \section{Methodology}
 
@@ -117,7 +117,7 @@ For Ridge regression, features were standardized (zero mean, unit variance) to e
 
 \subsection{Implementation}
 
-The analysis was implemented in Python using NumPy for numerical computations. Both OLS and Ridge solutions were computed using the closed-form matrix equations rather than iterative optimization.
+The analysis was implemented in Python using NumPy for numerical computations. Both OLS and Ridge solutions were computed using the closed-form matrix equations.
 
 \section{Results}
 
@@ -197,6 +197,7 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
     \footnotesize{Note: Coefficients shown are in standardized scale}
 \end{table}
 
+\clearpage
 \subsection{Model Comparison}
 
 \begin{table}[h]
@@ -205,7 +206,7 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
     \label{tab:comparison}
     \begin{tabular}{lccccc}
         \toprule
-        \textbf{Metric} & \textbf{OLS} & \textbf{Ridge ($\lambda$=1)} & \textbf{Ridge ($\lambda$=2)} & \textbf{Ridge ($\lambda$=100)} & \textbf{Ridge ($\lambda$=600)} \\
+        \textbf{Metric} & \textbf{OLS} & \textbf{Ridge $\lambda$=1} & \textbf{$\lambda$=2} & \textbf{$\lambda$=100} & \textbf{$\lambda$=600} \\
         \midrule
         Train RMSE & 5.28 & 5.29 & 5.29 & 6.63 & 9.82 \\
         Test RMSE & 6.76 & 6.76 & 6.76 & 7.85 & 10.73 \\
@@ -235,6 +236,7 @@ Ridge regression was performed with $\lambda$ values from 1 to 600. The optimal 
     \end{tabular}
 \end{table}
 
+\clearpage
 \subsection{Visualizations}
 
 \begin{figure}[h]
