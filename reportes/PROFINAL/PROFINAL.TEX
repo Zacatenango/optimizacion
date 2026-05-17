@@ -66,7 +66,45 @@ El conjunto de datos usado para estos fines es el \textbf{Telco Customer Churn} 
 
 El conjunto de datos \textit{Telco Customer Churn} tiene como finalidad ofrecer un medio para mejorar la retención de clientes a través de información acerca de ellos y un dato que muestra si han dejado la empresa de telefonía en el último mes.
 
-Las características de este modelo son:
+En este conjunto de datos, cada fila representa uno de los usuarios de la empresa de telefonía, y cada columna representa información acerca del cliente. Las características de este modelo son:
+
+\begin{enumerate}
+   \item \textbf{Variable dependiente:} \textit{Churn}. Es una variable binaria cuyos valores son ``Yes'' o ``No'', e indica si el cliente ha dejado la compañía en el último mes. La distribución de clases de esta variable es de 73.5\% retenidos ($\mathrm{Pr}(Churn = No)$) y 26.5\% no retenidos ($\mathrm{Pr}(Churn = Yes)$); está moderadamente desbalanceado, lo cual es importante a la hora de elegir hiperparámetros de ponderación de clase.
+   \item \textbf{Características:} Encuadran en 4 grupos naturales: \textbf{demográficas} (\textit{gender, SeniorCitizen, Partner, Dependents}), \textbf{información de cuenta} (\textit{tenure} (meses como cliente), \textit{Contract} (mensual, anual, bienal), \textit{PaperlessBilling, PaymentMethod}), y \textbf{servicios suscritos} (\textit{PhoneService, MultipleLines, InternetService, OnlineSecurity, OnlineBackup, DeviceProtection, TechSupport, StreamingTV, StreamingMovies}), y \textbf{cargos} (\textit{MonthlyCharges, TotalCharges}).
+\end{enumerate}
+
+Si realizamos un proceso de \textit{one-hot encoding} de las características (descrito más adelante), obtenemos un total de 30 dimensiones de datos; lo cual implica que \textbf{será necesario elegir características a través de la regularización}, a la vez que la cantidad de características es lo suficientemente pequeña para que un solver convexo lo pueda resolver.
+
+En general, podemos observar que se trata de un problema de clasificación supervisada binaria, lo cual hace que el modelo natural a elegir sea \textbf{regresión logística}. Además de prestarse de forma natural a variables dependientes binarias, este modelo tiene 3 características que van en línea con el contenido del curso:
+
+\begin{enumerate}
+   \item La regresión logística tiene una función de log-verosimilitud negativa convexa en parámetros, lo que hace que la superficie de pérdida tenga un mínimo global único.
+   \item Añadir regularización L1, L2 o elasticnet preservará la convexidad, lo que nos permitirá aplicarlas sin complejidades.
+   \item El problema de optimización tiene un planteamiento dual y condiciones KKT bien conocidas.
+\end{enumerate}
+
+
+
+\subsection{One-hot encoding de características}
+
+En la subsección anterior, mencioné que un proceso de \textit{one-hot encoding} de las características arrojó 30 dimensiones de datos. El proceso para hacer eso y las implicaciones se explican a continuación.
+
+\paragraph{Proceso} Consiste en...
+
+
+
+
+\section{Desarrollo del problema}
+
+Habiendo expuesto la composición de nuestro conjunto de datos, la metodología que seguiremos será:
+
+\begin{enumerate}
+   \item \textbf{Planteamiento del problema:} Predecir $\mathrm{Pr}(Churn = 1 | x)$ a partir de las características de los clientes.
+   \item \textbf{Modelos:} Regresión logística como modelo primario, SVM lineal como modelo secundario. Compararé la pérdida logística contra la \textit{hinge loss}. Privilegiaré el uso de modelos lineales con el fin de mantenernos en un marco de referencia convexo.
+   \item Plantear los hiperparámetros a optimizar y su espacio de búsqueda.
+   \item Plantear un problema de optimización convexa.
+   \item Implementación.
+\end{enumerate}
 
 
 

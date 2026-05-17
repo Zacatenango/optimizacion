@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex PROFINAL"] 1779003151.72307 "PROFINAL.aux" "PROFINAL.bbl" "PROFINAL" 1779003577.15241 0
+["bibtex PROFINAL"] 1779005322.89676 "PROFINAL.aux" "PROFINAL.bbl" "PROFINAL" 1779005326.76292 0
   "../bibliografias.bib" 1778997766 2583 f7bbc449e3ab56fa9d13e56dee2243e6 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/bibtex/bst/bibtex/apalike.bst" 1291972791 24635 604dafcc79f521a11ea73e506e1fbd98 ""
-  "PROFINAL.aux" 1779003575 2306 da02121d0b6b818e084a24f2926a899e "pdflatex"
+  "PROFINAL.aux" 1779005325 2661 f8e19578674eee357d4413077931bee9 "pdflatex"
   (generated)
   "PROFINAL.bbl"
   "PROFINAL.blg"
   (rewritten before read)
-["pdflatex"] 1779003572.48039 "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" "PROFINAL.pdf" "PROFINAL" 1779003577.15443 0
+["pdflatex"] 1779005323.31679 "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" "PROFINAL.pdf" "PROFINAL" 1779005326.76636 0
   "C:/Users/Midriffy/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1778995374 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/Midriffy/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1778995207 13351724 35be25b4e84fee402677d0adb7af4805 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1256929440 2375 baa924870cfb487815765f9094cf3728 ""
@@ -236,11 +236,11 @@
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "PROFINAL.aux" 1779003575 2306 da02121d0b6b818e084a24f2926a899e "pdflatex"
-  "PROFINAL.bbl" 1779003152 503 4bc6c68e7cdf561ab69a6bd4aeccf5b1 "bibtex PROFINAL"
-  "PROFINAL.out" 1779003575 2489 9c38f1192aac841492b89055487ba4a8 "pdflatex"
-  "PROFINAL.tex" 1779003571 14864 614f11f4949445077627bf3e81d87b34 ""
-  "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" 1779003571 14864 614f11f4949445077627bf3e81d87b34 ""
+  "PROFINAL.aux" 1779005325 2661 f8e19578674eee357d4413077931bee9 "pdflatex"
+  "PROFINAL.bbl" 1779005323 503 4bc6c68e7cdf561ab69a6bd4aeccf5b1 "bibtex PROFINAL"
+  "PROFINAL.out" 1779005325 2899 8a37590be20c6728abfa7bd1fd4bd17a "pdflatex"
+  "PROFINAL.tex" 1779005319 18289 e97993b74bf9d69f0f1049469ea516e3 ""
+  "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" 1779005319 18289 e97993b74bf9d69f0f1049469ea516e3 ""
   (generated)
   "PROFINAL.aux"
   "PROFINAL.log"
