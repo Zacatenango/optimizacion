@@ -1,0 +1,16 @@
+\begin{thebibliography}{}
+
+\bibitem[IBM, 2026]{IBMcognos2026}
+IBM (2026).
+\newblock Ibm cognos analytics.
+\newblock \url{https://www.ibm.com/products/cognos-analytics}.
+\newblock Consultado en Kaggle el 16 de Mayo de 2026.
+
+\bibitem[Kaggle, 2018]{kaggletelco2026}
+Kaggle (2018).
+\newblock Ibm telco customer churn dataset.
+\newblock
+  \url{https://www.kaggle.com/datasets/blastchar/telco-customer-churn/data}.
+\newblock Consultado en Kaggle el 16 de Mayo de 2026.
+
+\end{thebibliography}

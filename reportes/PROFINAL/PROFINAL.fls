@@ -333,13 +333,13 @@ INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\amsfonts\
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmr12.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmri10.tfm
+INPUT C:\Users\Midriffy\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx10.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmr.fd
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmr.fd
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\ts1lmr.fd
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ts1-lmbx10.tfm
-INPUT C:\Users\Midriffy\AppData\Local\MiKTeX\fonts\map\pdftex\pdftex.map
-INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ec.enc
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmbx12.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\enc\dvips\lm\lm-ts1.enc
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\rm-lmr10.tfm
@@ -381,6 +381,13 @@ INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmmib7
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmbsy10.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmbsy10.tfm
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\lmbsy7.tfm
+INPUT .\PROFINAL.bbl
+INPUT .\PROFINAL.bbl
+INPUT PROFINAL.bbl
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\tex\latex\lm\t1lmtt.fd
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\tfm\public\lm\ec-lmtt10.tfm
 INPUT PROFINAL.aux
 INPUT .\PROFINAL.out
 INPUT .\PROFINAL.out
@@ -418,3 +425,5 @@ INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy5.pfb
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy7.pfb
 INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmsy7.pfb
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
+INPUT C:\Users\Midriffy\AppData\Local\Programs\MiKTeX\fonts\type1\public\lm\lmtt10.pfb
