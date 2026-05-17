@@ -30,27 +30,42 @@
 \hypersetup{pdfborder={0 0 0}}   % Ligas sin borde
 
 \begin{document}
-\title{Tarea 6: SVM con Margen Suave Modificado}
+\title{Proyecto final de Optimización Convexa \\ Optimización de hiperparámetros en modelos predictivos}
 \author{Acoyani Garrido Sandoval}
 \date{\today}
 \maketitle
 
+
+
+
 \section{Introducción}
 
-El \emph{Support Vector Machine} (SVM) con margen suave es uno de los clasificadores más utilizados en aprendizaje máquina, ya que permite encontrar un hiperplano separador en problemas que no son linealmente separables al introducir variables de holgura $\xi_i \geq 0$ que permiten cierta tolerancia al error de clasificación. La formulación clásica de Cortes y Vapnik plantea:
+El objetivo del presente proyecto final es aplicar los conceptos aprendidos en el curso de Optimización Convexa para resolver un problema de optimización de hiperparámetros en un modelo predictivo.
 
-\begin{equation*}
-\min_{\mathbf{w}, b, \boldsymbol{\xi}} \; \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^{n}\xi_i, \qquad \text{s.a. } y_i(\mathbf{w}^\top \mathbf{x}_i + b) \geq 1 - \xi_i,\; \xi_i \geq 0.
-\end{equation*}
+En general, los pasos del proyecto son:
 
-En este trabajo se analiza una variante en la que la restricción se modifica introduciendo un factor $\lambda > 0$ que multiplica a la variable de holgura:
+\begin{enumerate}
+   \item Seleccionar un problema de aprendizaje supervisado o no supervisado. Puede ser uno que esté siendo desarrollado, o que tenga relevancia personal o académica.
+   \item Elegir modelos base que tengan hiperparámetros susceptibles de ser optimizados.
+   \item Identificar los hiperparámetros críticos del modelo y definir un espacio de búsqueda adecuado para cada uno de ellos.
+   \item Plantear el problema de buscar los valores de los hiperparámetros como un problema de optimización: regularización L1, L2 o \textit{elasticnet}, conjuntos convexos y restricciones, minimización de funciones convexas, dualidad y condiciones de optimalidad, o métodos de optimización tales como gradiente descendente.
+   \item Implementar la solución del problema en una Jupyter notebook. Está permitido el uso de librerías, siempre y cuando se justifique el método de optimización.
+\end{enumerate}
 
-\begin{equation*}
-y_i\!\left(\mathbf{w}^\top \mathbf{x}_i + b\right) \geq 1 - \lambda \xi_i, \quad \forall i = 1, \dots, n.
-\end{equation*}
 
-A continuación se desarrollan los cinco incisos solicitados, siguiendo el procedimiento estándar de optimización convexa: análisis cualitativo del parámetro, formulación del Lagrangiano, condiciones KKT, relaciones primales-duales, y derivación del problema dual.
 
+
+\section{Selección de conjunto de datos}
+
+El conjunto de datos usado para estos fines es el \textbf{Telco Customer Churn}, un conjunto de datos desarrollado por IBM originalmente como una muestra de datos incluída con el software IBM Cognos Analytics Server, un software de análisis y visualización de datos basado en Java Enterprise Edition. Este conjunto de datos reviste una doble importancia personal para mí, ya que por una parte se trata de un conjunto de datos relacionado con comportamiento de clientes, giro en el cual actualmente manejo un negocio denominado \textbf{BuzónQR\textregistered{}}, 
+
+
+\subsection{Características del conjunto de datos}
+
+
+
+\clearpage
+\clearpage
 \section{Desarrollo de la tarea}
 
 \subsection{Inciso 1: Efecto de $\lambda$ sobre el margen y las variables de holgura}
@@ -221,5 +236,7 @@ A lo largo de esta tarea se desarrolló completamente la teoría dual del SVM co
     \item Esto se traduce en una cota superior modificada $\alpha_i \leq C/\lambda$ en el dual.
     \item La función objetivo dual permanece idéntica al caso estándar, lo que demuestra que la modificación es equivalente a un reescalamiento del parámetro de regularización: $C_{\text{eff}} = C/\lambda$.
 \end{itemize}
+
+
 
 \end{document}

@@ -1,5 +1,5 @@
 # Fdb version 4
-["pdflatex"] 1778995376.83317 "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" "PROFINAL.pdf" "PROFINAL" 1778995379.49241 0
+["pdflatex"] 1778996889.22319 "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" "PROFINAL.pdf" "PROFINAL" 1778996892.29476 0
   "C:/Users/Midriffy/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map" 1778995374 82243 1f613cc6d41e31d3f380cec9f5c16fdc ""
   "C:/Users/Midriffy/AppData/Local/MiKTeX/miktex/data/le/pdftex/pdflatex.fmt" 1778995207 13351724 35be25b4e84fee402677d0adb7af4805 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ec.enc" 1256929440 2375 baa924870cfb487815765f9094cf3728 ""
@@ -7,6 +7,7 @@
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathit.enc" 1256929440 2405 5dcf2c1b967ee25cc46c58cd52244aed ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-mathsy.enc" 1256929440 2840 216e6e45ad352e2456e1149f28885bee ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-rm.enc" 1256929440 2327 9d6df24f9c4f7368395224341a95523a ""
+  "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/enc/dvips/lm/lm-ts1.enc" 1256929440 3031 6c4d3515bf7115d8518af1c9ab97ca44 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/jknappen/ec/ecrm1000.tfm" 993062122 3148 7e594c8240c71e432203f65ab5f95a51 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam10.tfm" 1233951854 916 f87d7c45f9c908e672703b83b72241a3 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/amsfonts/symbols/msam5.tfm" 1233951854 924 9904cf1d39e9767e7a3622f2a125a565 ""
@@ -53,6 +54,7 @@
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/rm-lmr6.tfm" 1256929440 11836 e3b6ce3e601aec94f64a536e7f4224d5 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/rm-lmr7.tfm" 1256929440 11852 5a9022f105fd1ee2797df861e79ae9a0 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/rm-lmr8.tfm" 1256929440 11864 309fd7f43e4a0ba39f6f7644d76e8edf ""
+  "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/tfm/public/lm/ts1-lmbx10.tfm" 1256929440 1592 5736212a9fa560a6cbd9ef3e09bb1f98 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx10.pfb" 1256929440 121021 836464b5fe0c782d94085eb083550ccc ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx12.pfb" 1256929440 116908 9a7a12d1e4df280ea0ab4aad83cdef88 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/fonts/type1/public/lm/lmbx7.pfb" 1256929440 119461 688b5cf3eb232c8cd2868757f6765296 ""
@@ -200,6 +202,7 @@
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/lm/omxlmex.fd" 1430474546 568 a5494d810f2680caf10205cd1226c76c ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/lm/ot1lmr.fd" 1430474546 1882 28c08db1407ebff35a658fd141753d16 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/lm/t1lmr.fd" 1430474546 1867 996fe743d88a01aca041ed22cc10e1bb ""
+  "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/lm/ts1lmr.fd" 1430474546 1914 884882d7ebb0fd65cea93fca77ff6f5a ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/moreverb/moreverb.sty" 1303156477 5863 07095464939df437145876547e980c96 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/parskip/parskip.sty" 1615976160 4288 94714aa7f535440f33181fec52a31963 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/pgf/basiclayer/pgfcore.sty" 1756451144 373 00b204b1d7d095b892ad31a7494b0373 ""
@@ -222,10 +225,10 @@
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/ulem/ulem.sty" 1578651445 15682 94f55b803e160cf7fb6e4d77d07cfe1d ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/url/url.sty" 1388490452 12796 8edb7d69a20b857904dd0ea757c14ec9 ""
   "C:/Users/Midriffy/AppData/Local/Programs/MiKTeX/tex/latex/xcolor/xcolor.sty" 1729265222 55384 b454dec21c2d9f45ec0b793f0995b992 ""
-  "PROFINAL.aux" 1778995378 1860 26d61b138f0afc5c147411d99d2d46a9 "pdflatex"
-  "PROFINAL.out" 1778995378 2023 b51856b25812d0f3251c32688b6469b3 "pdflatex"
-  "PROFINAL.tex" 1778995180 13143 1a3c58f827f7a437fc81c3f603ff82ee ""
-  "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" 1778995180 13143 1a3c58f827f7a437fc81c3f603ff82ee ""
+  "PROFINAL.aux" 1778996891 2133 1dcb6a133000c86a9d718acb471b63ed "pdflatex"
+  "PROFINAL.out" 1778996891 2489 9c38f1192aac841492b89055487ba4a8 "pdflatex"
+  "PROFINAL.tex" 1778996888 13910 c0b404061e19e91e871a3c0f7d652ca8 ""
+  "c:/Users/Midriffy/Code/ITESO/semestre2/optimizacion/reportes/PROFINAL/PROFINAL.tex" 1778996888 13910 c0b404061e19e91e871a3c0f7d652ca8 ""
   (generated)
   "PROFINAL.aux"
   "PROFINAL.log"
