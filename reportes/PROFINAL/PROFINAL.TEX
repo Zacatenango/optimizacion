@@ -723,6 +723,66 @@ SVM base          & RBF, $C=1$, $\gamma=\texttt{scale}$ & 0.8283 & 0.6230 & 0.82
     \end{itemize}
 \end{enumerate}
 
+\section{Conclusiones generales, recomendaciones, lecciones aprendidas y trabajo futuro}
+
+\subsection{Conclusiones generales}
+
+El proyecto aplicó dos familias de modelos supervisados —Regresión Logística (RL) y Máquinas de Vectores de Soporte con kernel RBF (SVM-RBF)— al problema de predicción de abandono de clientes en el conjunto de datos Telco Customer Churn (7043 registros, 20 predictores, desbalance $\approx 73\,\% / 27\,\%$).
+
+\begin{center}
+\begin{tabular}{p{5.5cm}p{8cm}}
+\toprule
+\textbf{Conclusión} & \textbf{Evidencia} \\
+\midrule
+La RL con regularización L2 es el mejor modelo global & AUC-ROC en prueba $= 0.8417$, el más alto de los cuatro modelos evaluados \\
+La RL ya era casi óptima antes de optimizar & Ganancia de $+0.0003$ en AUC\_CV al pasar de $C=1$ a $C^*=19.31$; no se transfiere a prueba ($-0.0011$) \\
+La optimización beneficia más al SVM & El AUC en prueba mejora $+0.0062$ al pasar de parámetros por defecto a $C=100$, $\gamma=0.001$ \\
+Existe un trade-off AUC vs F1 en el SVM & El óptimo para AUC ($C=100$, $\gamma=0.001$) degrada F1 (0.5876 vs 0.6200 base); el óptimo para F1 requiere una configuración distinta \\
+El conteo de vectores de soporte es un diagnóstico útil & El $53.8\,\%$ de SVs en el SVM base indicó sobre-regularización antes de examinar las métricas \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Recomendaciones}
+
+\begin{enumerate}
+    \item \textbf{Usar RL con L2, $C=1$ como modelo operativo.} Es el modelo más robusto, interpretable y de menor costo computacional. Los coeficientes permiten construir un \textit{scorecard} de riesgo por variable, lo que facilita la explicación al área de negocio.
+
+    \item \textbf{Optimizar el umbral de decisión en lugar del hiperparámetro.} Dado que el objetivo es minimizar los falsos negativos (clientes que abandonan sin ser detectados), ajustar el umbral de clasificación desde 0.5 hacia valores más bajos maximizará el \textit{recall} en la clase minoritaria con mayor impacto que la búsqueda de hiperparámetros.
+
+    \item \textbf{Si se requiere el SVM, usar $C=100$, $\gamma=0.001$ para maximizar AUC,} o $C \approx 1$, $\gamma \approx 0.01$ si el F1-score es la métrica objetivo del negocio.
+
+    \item \textbf{Reevaluar con datos recientes periódicamente.} El comportamiento de los clientes puede derivar en el tiempo (\textit{concept drift}); se recomienda reentrenar trimestralmente con validación temporal.
+\end{enumerate}
+
+\subsection{Lecciones aprendidas}
+
+\begin{enumerate}
+    \item \textbf{Un buen punto de partida puede no necesitar optimización.} La ruta de regularización mostró que $C=1$ en la RL ya estaba en la zona óptima. Asumir que los hiperparámetros por defecto son siempre subóptimos es incorrecto; la optimización debe justificarse comparando contra una línea base sólida.
+
+    \item \textbf{La métrica de evaluación define el resultado de la optimización.} Optimizar por AUC-ROC y por F1 conduce a configuraciones distintas para el SVM. Fijar la métrica objetivo antes de iniciar la búsqueda es una decisión de diseño crítica.
+
+    \item \textbf{La teoría del curso tiene aplicación directa en el diagnóstico de modelos.} Las condiciones KKT predijeron que un $C$ pequeño implica holgura excesiva; el $53.8\,\%$ de vectores de soporte confirmó este exceso empíricamente. La conexión teoría–experimento refuerza la comprensión de ambos.
+
+    \item \textbf{La validación cruzada estratificada es imprescindible con clases desbalanceadas.} Sin estratificación, algunos pliegues podrían no contener instancias de la clase minoritaria, sesgando la estimación de rendimiento.
+
+    \item \textbf{La formulación anidada (\textit{bilevel}) clarifica la búsqueda de hiperparámetros.} Distinguir explícitamente el problema exterior (búsqueda de $\lambda$) del interior (minimización convexa con $\lambda$ fijo) evita confundir la validación cruzada con el entrenamiento del modelo.
+\end{enumerate}
+
+\subsection{Propuestas a futuro}
+
+\begin{enumerate}
+    \item \textbf{Modelos de ensamble (Random Forest, XGBoost, LightGBM).} Permitirían capturar interacciones no lineales entre predictores sin necesidad de ingeniería de características manual. La importancia de variables SHAP complementaría la interpretabilidad de la RL.
+
+    \item \textbf{Optimización bayesiana de hiperparámetros.} Sustituir el barrido en grilla por un proceso gaussiano o por el estimador de Parzen (\textit{Tree of Parzen Estimators}) reduciría el número de evaluaciones de 80 a aproximadamente 20–30, manteniendo una calidad comparable del óptimo encontrado.
+
+    \item \textbf{Ingeniería de características basada en comportamiento.} Construir variables derivadas de la interacción entre \texttt{tenure}, \texttt{Contract} y \texttt{MonthlyCharges} (por ejemplo, gasto total proyectado o tasa de cambio de factura) podría mejorar la separabilidad de las clases antes de ajustar los modelos.
+
+    \item \textbf{Validación temporal (\textit{walk-forward})} en lugar de partición aleatoria. Entrenar en los primeros $n$ meses y evaluar en el mes $n+1$ mide el poder predictivo real en condiciones de despliegue, evitando la fuga de información futura (\textit{data leakage}).
+
+    \item \textbf{Calibración de probabilidades.} La probabilidad estimada por el SVM no está calibrada por defecto. Aplicar calibración isotónica o de Platt mejoraría la fiabilidad de los \textit{scores} para su uso en sistemas de priorización de campañas de retención.
+\end{enumerate}
+
 \bibliographystyle{apalike}
 \bibliography{../bibliografias}
 
