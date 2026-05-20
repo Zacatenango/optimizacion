@@ -89,7 +89,49 @@ En general, podemos observar que se trata de un problema de clasificación super
 
 En la subsección anterior, mencioné que un proceso de \textit{one-hot encoding} de las características arrojó 30 dimensiones de datos. El proceso para hacer eso y las implicaciones se explican a continuación.
 
-\paragraph{Proceso} Consiste en...
+\paragraph{¿Qué es?} El \textit{one-hot encoding} (codificación en caliente) es una técnica de preprocesamiento que convierte variables categóricas en variables numéricas binarias. Para cada variable categórica con $k$ categorías distintas, se crean $k$ columnas binarias (indicadoras), una por categoría, donde el valor 1 indica que la observación pertenece a esa categoría y 0 en caso contrario. En la práctica, para evitar multicolinealidad perfecta (\textit{dummy variable trap}), se elimina una de las $k$ columnas por variable, resultando en $k-1$ columnas nuevas; la categoría eliminada queda implícitamente representada cuando todas las demás son 0.
+
+\paragraph{Proceso} El conjunto de datos \textit{Telco Customer Churn} contiene 19 características (excluyendo \textit{customerID} y la variable dependiente \textit{Churn}). De ellas, 3 son ya numéricas continuas (\textit{tenure, MonthlyCharges, TotalCharges}) y 1 es binaria numérica (\textit{SeniorCitizen}), por lo que se mantienen sin transformación. Las 15 características categóricas restantes se procesan con \texttt{pd.get\_dummies(..., drop\_first=True)} de la librería \textit{Pandas}, eliminando una categoría por variable para evitar la trampa de la variable ficticia. La tabla siguiente resume la expansión de dimensiones:
+
+\begin{center}
+\begin{tabular}{llr}
+\toprule
+\textbf{Característica} & \textbf{Categorías} & \textbf{Columnas} \\
+  &   & \textbf{generadas} \\
+\midrule
+\textit{gender}           & Female, Male                            & 1 \\
+\textit{Partner}          & No, Yes                                 & 1 \\
+\textit{Dependents}       & No, Yes                                 & 1 \\
+\textit{PhoneService}     & No, Yes                                 & 1 \\
+\textit{PaperlessBilling} & No, Yes                                 & 1 \\
+\textit{MultipleLines}    & No, No phone service, Yes               & 2 \\
+\textit{InternetService}  & DSL, Fiber optic, No                    & 2 \\
+\textit{OnlineSecurity}   & No, No internet service, Yes            & 2 \\
+\textit{OnlineBackup}     & No, No internet service, Yes            & 2 \\
+\textit{DeviceProtection} & No, No internet service, Yes            & 2 \\
+\textit{TechSupport}      & No, No internet service, Yes            & 2 \\
+\textit{StreamingTV}      & No, No internet service, Yes            & 2 \\
+\textit{StreamingMovies}  & No, No internet service, Yes            & 2 \\
+\textit{Contract}         & Month-to-month, One year, Two year      & 2 \\
+\textit{PaymentMethod}    & Bank transfer, Credit card,  & 3 \\
+                          & Electronic check, Mailed check & 3 \\
+\midrule
+4 numéricas               & (\textit{SeniorCitizen, tenure,}) & 4 \\
+                          & (\textit{MonthlyCharges, TotalCharges}) & 4 \\
+\midrule
+\textbf{Total}            &                                         & \textbf{30} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Implicaciones}
+
+\begin{enumerate}
+   \item \textbf{Dimensionalidad manejable.} Las 30 dimensiones resultantes son suficientemente pocas para que un solver convexo (como \texttt{liblinear} o \texttt{lbfgs} dentro de \texttt{sklearn.linear\_model.LogisticRegression}) las maneje eficientemente.
+   \item \textbf{Necesidad de regularización.} Con 30 características y 7{,}043 observaciones, la razón de observaciones por característica es de aproximadamente 235:1, lo cual en principio es favorable. Sin embargo, varios subgrupos de variables indicadoras están correlacionados entre sí (p.~ej., los servicios que dependen de \textit{InternetService}), por lo que la regularización L1 o L2 sigue siendo conveniente para controlar la varianza del modelo y producir coeficientes interpretables.
+   \item \textbf{Interpretabilidad de coeficientes.} Cada coeficiente $\beta_j$ en la regresión logística representa el cambio en el log-odds de \textit{Churn} al pasar de la categoría de referencia a la categoría representada, manteniendo las demás características constantes; esto facilita la interpretación de resultados.
+   \item \textbf{Escala.} Las columnas numéricas continuas (\textit{tenure, MonthlyCharges, TotalCharges}) tienen escalas distintas a las variables indicadoras $\{0,1\}$, por lo que es necesario estandarizarlas (media cero, varianza unitaria) antes de ajustar el modelo con regularización, para que la penalización afecte a todos los coeficientes de forma equitativa.
+\end{enumerate}
 
 
 
@@ -110,176 +152,9 @@ Habiendo expuesto la composición de nuestro conjunto de datos, la metodología 
 
 \clearpage
 \clearpage
-\section{Desarrollo de la tarea}
+\section{Modelo predictivo de regresión logística}
 
-\subsection{Inciso 1: Efecto de $\lambda$ sobre el margen y las variables de holgura}
 
-El parámetro $\lambda > 0$ actúa como un \textbf{factor de escalamiento de las variables de holgura} dentro de la restricción de clasificación. Reescribiendo la restricción modificada como
-\[
-y_i(\mathbf{w}^\top \mathbf{x}_i + b) \geq 1 - \lambda \xi_i,
-\]
-se observa que cada unidad de holgura $\xi_i$ relaja el margen funcional en una cantidad $\lambda \xi_i$. Es decir, $\lambda$ controla la \emph{eficacia con la que cada unidad de holgura reduce el margen requerido}.
-
-\textbf{Caso $\lambda \to 0^{+}$:} La restricción tiende a $y_i(\mathbf{w}^\top \mathbf{x}_i + b) \geq 1$ independientemente del valor de $\xi_i$. Esto significa que las variables de holgura pierden todo su poder de relajación: por más grande que sea $\xi_i$, la restricción dura sigue exigiendo una clasificación correcta con margen unitario. El problema degenera al \textbf{SVM de margen duro}, que es infactible cuando los datos no son linealmente separables. Además, como $\xi_i$ ya no relaja nada pero sigue penalizándose con $C\xi_i$ en el objetivo, la solución óptima fija $\xi_i^* = 0$ siempre que sea factible.
-
-\textbf{Caso $\lambda \to \infty$:} Una holgura $\xi_i$ infinitesimal basta para satisfacer la restricción, pues $\lambda \xi_i$ se vuelve arbitrariamente grande. La restricción se vuelve \textbf{trivialmente satisfacible}: incluso para puntos mal clasificados, un valor pequeño de $\xi_i$ es suficiente. En el límite, la restricción deja de ser activa y el problema se reduce a minimizar $\tfrac{1}{2}\|\mathbf{w}\|^2 + C\sum_i \xi_i$ con la solución trivial $\mathbf{w}^* = 0$, $\xi_i^* = 0$, lo cual corresponde a un \textbf{clasificador degenerado} sin capacidad discriminativa.
-
-\textbf{Impacto sobre el problema de optimización:} En la formulación dual (que se obtendrá en el inciso 5), $\lambda$ aparece modificando la cota superior de los multiplicadores de Lagrange como $0 \leq \alpha_i \leq C/\lambda$. De manera que:
-\begin{itemize}
-    \item Valores pequeños de $\lambda$ permiten multiplicadores $\alpha_i$ grandes, dando \emph{más peso} a los vectores de soporte y produciendo un margen más estricto.
-    \item Valores grandes de $\lambda$ restringen fuertemente a los $\alpha_i$, lo que se traduce en un clasificador con menor influencia de los puntos individuales y por tanto un \emph{margen más amplio pero con más violaciones permitidas}.
-\end{itemize}
-
-En síntesis, $\lambda$ actúa de manera \emph{opuesta} a $C$: incrementar $\lambda$ es cualitativamente equivalente a disminuir el costo efectivo de la holgura.
-
-\subsection{Inciso 2: Formulación del Lagrangiano}
-
-El problema primal es:
-\begin{align*}
-\min_{\mathbf{w}, b, \boldsymbol{\xi}}\;\;& \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^{n}\xi_i\\
-\text{s.a. }\;\;& y_i(\mathbf{w}^\top \mathbf{x}_i + b) - 1 + \lambda \xi_i \geq 0, \quad i=1,\dots,n,\\
-& \xi_i \geq 0, \quad i=1,\dots,n.
-\end{align*}
-
-Asociando los multiplicadores de Lagrange $\alpha_i \geq 0$ a las restricciones de clasificación y $\mu_i \geq 0$ a las restricciones de no-negatividad de las holguras, el Lagrangiano queda:
-\begin{equation}
-\boxed{\;
-\mathcal{L}(\mathbf{w}, b, \boldsymbol{\xi}, \boldsymbol{\alpha}, \boldsymbol{\mu}) = 
-\frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^{n}\xi_i 
-- \sum_{i=1}^{n}\alpha_i\!\left[y_i(\mathbf{w}^\top \mathbf{x}_i + b) - 1 + \lambda \xi_i\right] 
-- \sum_{i=1}^{n}\mu_i \xi_i.
-\;}
-\end{equation}
-
-\subsection{Inciso 3: Condiciones de Karush-Kuhn-Tucker (KKT)}
-
-Las condiciones KKT del problema modificado son:
-
-\textbf{(a) Estacionariedad} (gradiente nulo respecto a las variables primales):
-\begin{align}
-\frac{\partial \mathcal{L}}{\partial \mathbf{w}} &= \mathbf{w} - \sum_{i=1}^{n}\alpha_i y_i \mathbf{x}_i = \mathbf{0},\\
-\frac{\partial \mathcal{L}}{\partial b} &= -\sum_{i=1}^{n}\alpha_i y_i = 0,\\
-\frac{\partial \mathcal{L}}{\partial \xi_i} &= C - \lambda\alpha_i - \mu_i = 0, \quad i=1,\dots,n.
-\end{align}
-
-\textbf{(b) Factibilidad primal:}
-\begin{align}
-y_i(\mathbf{w}^\top \mathbf{x}_i + b) - 1 + \lambda \xi_i &\geq 0, \quad i=1,\dots,n,\\
-\xi_i &\geq 0, \quad i=1,\dots,n.
-\end{align}
-
-\textbf{(c) Factibilidad dual:}
-\begin{align}
-\alpha_i &\geq 0, \quad i=1,\dots,n,\\
-\mu_i &\geq 0, \quad i=1,\dots,n.
-\end{align}
-
-\textbf{(d) Holgura complementaria:}
-\begin{align}
-\alpha_i\!\left[y_i(\mathbf{w}^\top \mathbf{x}_i + b) - 1 + \lambda \xi_i\right] &= 0, \quad i=1,\dots,n,\\
-\mu_i \xi_i &= 0, \quad i=1,\dots,n.
-\end{align}
-
-\subsection{Inciso 4: Relaciones entre $\mathbf{w}$, $b$ y $\boldsymbol{\xi}$}
-
-A partir de las condiciones de estacionariedad obtenidas en (1)–(3) se deducen las siguientes relaciones primales-duales fundamentales:
-
-\textbf{Relación para $\mathbf{w}$:} De $\partial \mathcal{L}/\partial \mathbf{w} = 0$ se obtiene
-\begin{equation}
-\boxed{\; \mathbf{w} = \sum_{i=1}^{n}\alpha_i y_i \mathbf{x}_i. \;}
-\end{equation}
-El vector óptimo $\mathbf{w}$ es una combinación lineal de los puntos de entrenamiento, ponderados por su etiqueta $y_i$ y su multiplicador $\alpha_i$. Solo los puntos con $\alpha_i > 0$ (\emph{vectores de soporte}) contribuyen.
-
-\textbf{Relación para $b$:} De $\partial \mathcal{L}/\partial b = 0$ se obtiene la \emph{condición de balance}
-\begin{equation}
-\boxed{\; \sum_{i=1}^{n}\alpha_i y_i = 0. \;}
-\end{equation}
-Esta es una restricción lineal sobre los multiplicadores que garantiza que el problema dual sea consistente. El valor concreto de $b$ se obtiene posteriormente mediante la holgura complementaria, evaluando la restricción activa en algún vector de soporte $i^{*}$ con $0 < \alpha_{i^{*}} < C/\lambda$:
-\[
-b = \frac{1 - \lambda \xi_{i^{*}}}{y_{i^{*}}} - \mathbf{w}^\top \mathbf{x}_{i^{*}}.
-\]
-
-\textbf{Relación para $\boldsymbol{\xi}$:} De $\partial \mathcal{L}/\partial \xi_i = 0$ resulta
-\begin{equation}
-\boxed{\; \mu_i = C - \lambda \alpha_i, \quad i=1,\dots,n. \;}
-\end{equation}
-Combinando con la factibilidad dual $\mu_i \geq 0$, se obtiene la \textbf{cota superior modificada} sobre los multiplicadores:
-\begin{equation}
-\boxed{\; 0 \leq \alpha_i \leq \frac{C}{\lambda}, \quad i=1,\dots,n. \;}
-\end{equation}
-
-Esta es la diferencia clave respecto del SVM estándar (donde la cota es $\alpha_i \leq C$): el factor $\lambda$ \emph{reescala la cota superior} de los multiplicadores. Análisis adicional de la holgura complementaria $\mu_i \xi_i = 0$:
-\begin{itemize}
-    \item Si $\alpha_i < C/\lambda$, entonces $\mu_i > 0$ y por holgura complementaria $\xi_i = 0$ (el punto está bien clasificado con margen $\geq 1$).
-    \item Si $\alpha_i = C/\lambda$, entonces $\mu_i = 0$ y $\xi_i$ puede ser positivo (el punto puede estar dentro del margen o incluso mal clasificado).
-\end{itemize}
-
-\subsection{Inciso 5: Derivación del problema dual}
-
-Sustituimos las relaciones de estacionariedad en el Lagrangiano para eliminar las variables primales. Partiendo de:
-\[
-\mathcal{L} = \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i}\xi_i - \sum_{i}\alpha_i y_i \mathbf{w}^\top \mathbf{x}_i - b\sum_{i}\alpha_i y_i + \sum_{i}\alpha_i - \lambda\sum_{i}\alpha_i \xi_i - \sum_{i}\mu_i \xi_i.
-\]
-
-\textbf{Paso 1: Eliminar el término en $b$.} Por la condición $\sum_i \alpha_i y_i = 0$:
-\[
-b\sum_{i}\alpha_i y_i = 0.
-\]
-
-\textbf{Paso 2: Eliminar los términos en $\xi_i$.} Agrupando:
-\[
-\sum_{i}(C - \lambda\alpha_i - \mu_i)\xi_i = 0,
-\]
-ya que $C - \lambda\alpha_i - \mu_i = 0$ por la estacionariedad respecto de $\xi_i$.
-
-\textbf{Paso 3: Sustituir $\mathbf{w}$.} Usando $\mathbf{w} = \sum_i \alpha_i y_i \mathbf{x}_i$:
-\[
-\|\mathbf{w}\|^2 = \mathbf{w}^\top \mathbf{w} = \sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_j y_i y_j \mathbf{x}_i^\top \mathbf{x}_j,
-\]
-\[
-\sum_{i}\alpha_i y_i \mathbf{w}^\top \mathbf{x}_i = \sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_j y_i y_j \mathbf{x}_i^\top \mathbf{x}_j.
-\]
-Por lo tanto:
-\[
-\frac{1}{2}\|\mathbf{w}\|^2 - \sum_{i}\alpha_i y_i \mathbf{w}^\top \mathbf{x}_i = -\frac{1}{2}\sum_{i,j}\alpha_i \alpha_j y_i y_j \mathbf{x}_i^\top \mathbf{x}_j.
-\]
-
-\textbf{Función objetivo dual.} Reuniendo todos los términos sobrevivientes:
-\begin{equation}
-\boxed{\;
-\mathcal{D}(\boldsymbol{\alpha}) = \sum_{i=1}^{n}\alpha_i - \frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_j y_i y_j \mathbf{x}_i^\top \mathbf{x}_j.
-\;}
-\end{equation}
-
-\textbf{Restricciones del dual.} Los multiplicadores deben cumplir:
-\begin{align*}
-\sum_{i=1}^{n}\alpha_i y_i &= 0, \\[2pt]
-0 \leq \alpha_i &\leq \frac{C}{\lambda}, \quad i=1,\dots,n.
-\end{align*}
-
-\textbf{Problema dual completo.} El problema dual del SVM con margen suave modificado es por tanto:
-\begin{equation}
-\boxed{\;
-\begin{aligned}
-\max_{\boldsymbol{\alpha}}\;\; & \sum_{i=1}^{n}\alpha_i - \frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i \alpha_j y_i y_j \mathbf{x}_i^\top \mathbf{x}_j \\
-\text{s.a. }\;\; & \sum_{i=1}^{n}\alpha_i y_i = 0, \\
-& 0 \leq \alpha_i \leq \frac{C}{\lambda}, \quad i=1,\dots,n.
-\end{aligned}
-\;}
-\end{equation}
-
-\textbf{Observación final.} La forma del dual es estructuralmente idéntica al SVM estándar, con la única diferencia de que la \textbf{cota superior de los multiplicadores cambia de $C$ a $C/\lambda$}. Esto confirma cuantitativamente la intuición del inciso 1: el efecto de $\lambda$ es equivalente a reescalar el parámetro de regularización efectivo $C_{\text{eff}} = C/\lambda$. Por tanto, esta modificación no introduce nueva expresividad al modelo --- es matemáticamente equivalente a usar un SVM estándar con un parámetro $C$ escalado---, lo cual es un resultado teóricamente interesante.
-
-\section{Conclusiones}
-
-A lo largo de esta tarea se desarrolló completamente la teoría dual del SVM con margen suave modificado mediante el factor $\lambda$. Los resultados principales son:
-
-\begin{itemize}
-    \item El parámetro $\lambda$ controla la eficacia con que la holgura relaja el margen, actuando opuestamente al parámetro $C$.
-    \item La estructura de las condiciones KKT es análoga al caso estándar, con la única modificación de la condición de estacionariedad respecto de $\xi_i$, que pasa de $C - \alpha_i - \mu_i = 0$ a $C - \lambda\alpha_i - \mu_i = 0$.
-    \item Esto se traduce en una cota superior modificada $\alpha_i \leq C/\lambda$ en el dual.
-    \item La función objetivo dual permanece idéntica al caso estándar, lo que demuestra que la modificación es equivalente a un reescalamiento del parámetro de regularización: $C_{\text{eff}} = C/\lambda$.
-\end{itemize}
 
 \bibliographystyle{apalike}
 \bibliography{../bibliografias}
