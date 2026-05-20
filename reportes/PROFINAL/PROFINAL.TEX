@@ -150,10 +150,128 @@ Habiendo expuesto la composición de nuestro conjunto de datos, la metodología 
 
 
 
-\clearpage
-\clearpage
+
 \section{Modelo predictivo de regresión logística}
 
+\subsection{Planteamiento del problema de optimización}
+
+\subsubsection{Objetivo predictivo}
+
+Dado un vector de características $\mathbf{x} \in \mathbb{R}^{30}$ que describe a un cliente, queremos estimar:
+
+\begin{equation}
+\Pr(\text{Churn} = 1 \mid \mathbf{x}) = \sigma(\mathbf{w}^\top \mathbf{x} + b) = \frac{1}{1 + e^{-(\mathbf{w}^\top \mathbf{x} + b)}}
+\end{equation}
+
+donde $\sigma(\cdot)$ es la función sigmoide, $\mathbf{w} \in \mathbb{R}^{30}$ es el vector de pesos que cada característica tiene en el resultado final, $\mathbf{x}$ es el vector de características leídas del conjunto de datos, y $b \in \mathbb{R}$ es el sesgo. La sigmoide es el fundamento de la \textbf{regresión logística}: si asumimos que el log-odds de la probabilidad es lineal en $\mathbf{x}$,
+
+\begin{equation}
+\log \frac{\Pr(\text{Churn}=1 \mid \mathbf{x})}{\Pr(\text{Churn}=0 \mid \mathbf{x})} = \mathbf{w}^\top \mathbf{x} + b,
+\end{equation}
+
+despejar $\Pr(\text{Churn}=1 \mid \mathbf{x})$ da exactamente $\sigma(\mathbf{w}^\top \mathbf{x} + b)$. Cada componente $w_j$ del vector $\mathbf{w}$ es la pendiente asociada a la $j$-ésima característica, análoga al coeficiente de una regresión lineal.
+
+\subsubsection{Función de pérdida (log-verosimilitud negativa)}
+
+Para un conjunto de entrenamiento $\{(\mathbf{x}_i, y_i)\}_{i=1}^{n}$ con $y_i \in \{0,1\}$, la pérdida logística es:
+
+\begin{equation}
+\mathcal{L}(\mathbf{w}, b) = -\frac{1}{n} \sum_{i=1}^{n} \left[ y_i \log \hat{p}_i + (1-y_i) \log(1-\hat{p}_i) \right]
+\end{equation}
+
+donde $\hat{p}_i = \sigma(\mathbf{w}^\top \mathbf{x}_i + b)$. Esta función es \textbf{convexa en $(\mathbf{w}, b)$}, lo que garantiza la existencia de un mínimo global único.
+
+\subsubsection{Problema de optimización con regularización}
+
+Para controlar la varianza del modelo y forzar escasez o suavidad en los coeficientes, añadimos regularización:
+
+\begin{equation}
+\min_{\mathbf{w},\, b} \quad \mathcal{L}(\mathbf{w}, b) + \lambda \, \Omega(\mathbf{w})
+\end{equation}
+
+donde la penalización $\Omega(\mathbf{w})$ puede ser:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Regularización} & $\Omega(\mathbf{w})$ & \textbf{Propiedad} \\
+\midrule
+\textbf{L2} (Ridge)   & $\frac{1}{2}\|\mathbf{w}\|_2^2$                                       & Coeficientes pequeños, solución única \\
+\textbf{L1} (Lasso)   & $\|\mathbf{w}\|_1$                                                    & Selección de características (\textit{sparse}) \\
+\textbf{ElasticNet}   & $\alpha\|\mathbf{w}\|_1 + \frac{1-\alpha}{2}\|\mathbf{w}\|_2^2$       & Combinación de ambas \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Dado el desbalance de clases (73.5\,\% / 26.5\,\%), se añade también \texttt{class\_weight='balanced'}, que pondera cada ejemplo $i$ con $w_i \propto 1/\Pr(y_i)$. El hiperparámetro principal a optimizar es $C = 1/\lambda$ (inverso de la intensidad de regularización): un $C$ grande implica poca regularización; un $C$ pequeño impone penalización fuerte y coeficientes más cercanos a cero.
+
+\subsection{Implementación}
+
+\subsubsection{Preprocesamiento}
+
+Los pasos de preprocesamiento aplicados fueron:
+
+\begin{enumerate}
+    \item Eliminar \texttt{customerID} (identificador sin valor predictivo).
+    \item Convertir \texttt{TotalCharges} a numérico; los espacios en blanco de clientes nuevos se imputan como 0.
+    \item Codificar \textit{Churn} como variable binaria $\{0, 1\}$.
+    \item Aplicar \textit{one-hot encoding} con \texttt{drop\_first=True} a las variables categóricas.
+    \item Separar características ($X$) y variable dependiente ($y$).
+    \item Dividir en conjunto de entrenamiento (80\,\%) y prueba (20\,\%) con estratificación por clase.
+    \item Estandarizar las columnas numéricas continuas (\textit{tenure}, \textit{MonthlyCharges}, \textit{TotalCharges}) con media 0 y varianza 1, ajustando el \texttt{StandardScaler} únicamente sobre el conjunto de entrenamiento para evitar fuga de información.
+\end{enumerate}
+
+El resultado es un conjunto de entrenamiento de 5{,}634 observaciones y uno de prueba de 1{,}409, ambos con 30 características.
+
+\subsubsection{Modelo inicial y el solver L-BFGS}
+
+Se ajustó un primer modelo de regresión logística con regularización \textbf{L2}, $C = 1$ y \texttt{class\_weight='balanced'}. El solver \texttt{lbfgs} (\textit{Limited-memory Broyden--Fletcher--Goldfarb--Shanno}) minimiza internamente:
+
+\begin{equation}
+\min_{\mathbf{w},\, b} \quad \frac{1}{n} \sum_{i=1}^{n} \left[ -y_i \log \sigma_i - (1-y_i) \log(1-\sigma_i) \right] + \frac{1}{2C} \|\mathbf{w}\|_2^2
+\end{equation}
+
+L-BFGS es un método de \textbf{quasi-Newton}: en lugar de calcular el Hessiano exacto $\nabla^2 \mathcal{L}$, lo aproxima iterativamente usando los últimos $m$ pares $\{(\Delta \mathbf{w}_k,\, \Delta \nabla \mathcal{L}_k)\}$ para construir la dirección de descenso $\mathbf{d}_k = -H_k^{-1} \nabla \mathcal{L}(\mathbf{w}_k)$, seguida de \textit{line search} para determinar el paso $\alpha_k$:
+
+\begin{equation}
+\mathbf{w}_{k+1} = \mathbf{w}_k + \alpha_k \mathbf{d}_k
+\end{equation}
+
+Es el solver óptimo para este problema porque: (1) la convexidad estricta de la pérdida logística con L2 garantiza convergencia al mínimo global único; (2) la información de curvatura permite pasos más grandes que el gradiente descendente puro; (3) el costo de memoria $O(m \cdot p)$ es despreciable con $p=30$; y (4) la regularización L2 es diferenciable en todo su dominio.
+
+\subsubsection{Evaluación del modelo base}
+
+Las métricas se calculan a partir de la matriz de confusión, que organiza las predicciones en cuatro celdas: Verdaderos Positivos ($VP$), Verdaderos Negativos ($VN$), Falsos Positivos ($FP$) y Falsos Negativos ($FN$). Las métricas son:
+
+\begin{itemize}
+    \item \textbf{Precision} $= VP / (VP + FP)$: fracción de los predichos como ``Abandona'' que realmente abandonaron. Alta precisión implica pocas falsas alarmas.
+    \item \textbf{Recall} $= VP / (VP + FN)$: fracción de los abandonos reales detectados por el modelo. Alto recall implica pocos abandonos sin detectar.
+    \item \textbf{F1-score} $= 2 \cdot \text{Precision} \cdot \text{Recall} / (\text{Precision} + \text{Recall})$: media armónica entre ambas; útil con clases desbalanceadas.
+    \item \textbf{Accuracy} $= (VP + VN) / n$: puede ser engañosa con desbalance (un clasificador que siempre predice ``Retenido'' tendría 73.5\,\% de accuracy).
+    \item \textbf{Macro avg}: promedio simple entre clases, sin ponderar por tamaño; trata ambas clases como igualmente importantes.
+    \item \textbf{Weighted avg}: promedio ponderado por el \textit{support} de cada clase; refleja el desempeño global considerando el desbalance.
+\end{itemize}
+
+Para este problema, el \textbf{recall} de la clase positiva es la métrica de mayor peso de negocio: el costo de no detectar un cliente que abandona (falso negativo) supera al costo de una alarma innecesaria (falso positivo).
+
+El \textbf{AUC-ROC} (\textit{Area Under the Receiver Operating Characteristic Curve}) mide la capacidad discriminativa del modelo independientemente del umbral, graficando la tasa de verdaderos positivos contra la tasa de falsos positivos para cada umbral posible. Un valor de AUC = $x$ significa que, tomando al azar un par (cliente que abandona, cliente que no), el modelo asigna mayor probabilidad al primero en el $100x$\,\% de los casos. Un AUC de 0.5 equivale a un clasificador aleatorio; un AUC de 1.0 es un clasificador perfecto.
+
+\subsubsection{Validación cruzada del modelo base}
+
+Para obtener una estimación más robusta del desempeño se realizó una validación cruzada estratificada de 5 pliegues sobre el conjunto de entrenamiento. El procedimiento divide los datos en 5 subconjuntos manteniendo la proporción de clases; el modelo se entrena 5 veces usando 4 pliegues y evaluando en el restante. Esto reduce la varianza de la estimación y usa todos los datos para la evaluación. Los resultados fueron:
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Métrica} & \textbf{Media} & \textbf{Desviación estándar} \\
+\midrule
+AUC-ROC  & 0.8454 & $\pm$\,0.0126 \\
+F1-score & 0.6298 & $\pm$\,0.0220 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Un AUC-ROC de 0.8454 indica que el modelo discrimina correctamente en el 84.5\,\% de los pares aleatorios. La desviación estándar baja en ambas métricas confirma que el desempeño es estable entre particiones. Estos valores constituyen la \textbf{línea base} contra la que se compararán los modelos optimizados; una mejora genuina deberá superar estos valores fuera del rango de $\pm 1$ desviación estándar.
 
 
 \bibliographystyle{apalike}
