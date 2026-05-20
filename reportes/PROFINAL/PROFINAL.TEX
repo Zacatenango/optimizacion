@@ -511,6 +511,218 @@ F1-score & $0.6230 \pm 0.0251$ & $0.6298 \pm 0.0220$ & $-0.0068$ \\
 El diagnóstico conjunto —AUC inferior a LR tanto en prueba como en validación cruzada, más el 53.8\,\% de vectores de soporte— confirma que el SVM está sobreregularizado. Estos resultados constituyen la \textbf{línea base SVM} para la optimización de hiperparámetros: AUC-ROC $= 0.8283 \pm 0.0103$, F1 $= 0.6230 \pm 0.0251$. Una mejora genuina deberá superar los umbrales $\mathrm{AUC} > 0.8386$ y $\mathrm{F1} > 0.6481$ (media $+ 1\sigma$).
 
 
+
+\section{Optimización de hiperparámetros}
+
+\subsection{Hiperparámetros susceptibles de optimización}
+
+\subsubsection{Regresión Logística}
+
+El problema de optimización de la regresión logística con regularización se escribe como:
+
+\begin{equation}
+\min_{\mathbf{w},\, b} \quad \underbrace{\frac{1}{C}\,\Omega(\mathbf{w})}_{\text{término de regularización}} + \underbrace{\frac{1}{n}\sum_{i=1}^{n} \log\!\left(1 + e^{-y_i\,(\mathbf{w}^\top\mathbf{x}_i + b)}\right)}_{\text{pérdida logística (convexa)}}
+\end{equation}
+
+donde $C = 1/\lambda > 0$ es el parámetro que controla el balance entre regularización y ajuste. Los hiperparámetros a optimizar son:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Hiperparámetro} & \textbf{Descripción} & \textbf{Rango típico} \\
+\midrule
+$C$ & Inverso de la intensidad de regularización ($\lambda = 1/C$) & $[10^{-3},\; 10^{2}]$ (escala log) \\
+Tipo de penalización & Norma que define el término $\Omega(\mathbf{w})$ & L1, L2, Elastic-Net \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Cada tipo de penalización corresponde a una técnica del curso:
+
+\begin{center}
+\begin{tabular}{lp{3.8cm}p{6cm}}
+\toprule
+\textbf{Técnica del curso} & \textbf{$\Omega(\mathbf{w})$} & \textbf{Propiedad geométrica} \\
+\midrule
+Regularización L2 & $\tfrac{1}{2}\|\mathbf{w}\|_2^2$ & Estrictamente convexa y diferenciable; encoge coeficientes de forma uniforme \\
+Regularización L1 & $\|\mathbf{w}\|_1$ & Convexa, no diferenciable en el origen; induce coeficientes exactamente cero (selección de variables) \\
+Elastic-Net & $\rho\|\mathbf{w}\|_1 + \tfrac{1-\rho}{2}\|\mathbf{w}\|_2^2$ & Combinación convexa de L1 y L2 con $\rho \in [0,1]$; hereda propiedades de ambas \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{SVM con kernel RBF}
+
+El problema \textbf{primal} del SVM de margen suave es:
+
+\begin{equation}
+\min_{\mathbf{w},\, b,\, \boldsymbol{\xi}} \quad \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i=1}^{n}\xi_i \qquad \text{s.a.} \quad y_i\!\left(\mathbf{w}^\top\phi(\mathbf{x}_i)+b\right) \geq 1-\xi_i,\quad \xi_i \geq 0
+\end{equation}
+
+Mediante multiplicadores de Lagrange y condiciones KKT (dualidad del curso), el problema dual equivalente es:
+
+\begin{equation}
+\max_{\boldsymbol{\alpha}} \quad \sum_{i=1}^{n}\alpha_i - \frac{1}{2}\sum_{i,j}\alpha_i\alpha_j\,y_iy_j\,K(\mathbf{x}_i,\mathbf{x}_j) \qquad \text{s.a.} \quad \sum_i\alpha_iy_i=0,\quad 0\leq\alpha_i\leq C
+\end{equation}
+
+Los hiperparámetros a optimizar y su conexión con la teoría dual son:
+
+\begin{center}
+\begin{tabular}{lp{4.5cm}p{5.5cm}}
+\toprule
+\textbf{Hiperparámetro} & \textbf{Descripción} & \textbf{Conexión con el curso} \\
+\midrule
+$C$ & Cota superior de los multiplicadores duales $\alpha_i$ & Dualidad y condiciones KKT: $C$ aparece explícitamente como cota en el dual \\
+$\gamma$ & Ancho de banda del kernel RBF: $K(\mathbf{x},\mathbf{x}') = e^{-\gamma\|\mathbf{x}-\mathbf{x}'\|^2}$ & Controla la curvatura del espacio de características inducido por el kernel \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Técnica elegida: Ruta de regularización}
+
+\textbf{Técnica del curso:} regularización L1, L2 y elastic-net (la más sencilla de implementar).
+
+El problema de optimización de hiperparámetros se formula como un problema \textbf{anidado} (\textit{bilevel optimization}):
+
+\begin{equation}
+\lambda^*,\; \text{tipo}^* \;=\; \arg\min_{\lambda \in \Lambda,\; \text{tipo} \in \mathcal{P}} \;\mathcal{L}_{\mathrm{CV}}\!\left(\hat{\mathbf{w}}_{\lambda,\,\text{tipo}}\right)
+\end{equation}
+
+\begin{itemize}
+    \item \textbf{Problema exterior:} busca la combinación $(\lambda, \text{tipo})$ que minimiza la pérdida medida por validación cruzada estratificada de 5 pliegues ($\mathcal{L}_{\mathrm{CV}}$, que aproxima la pérdida de generalización).
+    \item \textbf{Problema interior:} para cada valor fijo de $(\lambda, \text{tipo})$, resuelve el problema de minimización regularizada —convexo y diferenciable, excepto L1 en el origen— para obtener $\hat{\mathbf{w}}_{\lambda,\,\text{tipo}}$.
+\end{itemize}
+
+La solución $\hat{\mathbf{w}}_\lambda$ como función de $\lambda$ define la \textbf{ruta de regularización}: trayectoria en el espacio de parámetros que va del modelo saturado ($\lambda \to 0$) al modelo nulo ($\lambda \to \infty$).
+
+\subsection{Formulación del problema de optimización}
+
+\subsubsection{Regresión Logística — Ruta de regularización}
+
+Para cada par $(\lambda, \text{tipo})$ se resuelve el problema interior convexo y se evalúa la métrica de generalización mediante validación cruzada:
+
+\begin{equation}
+\mathcal{L}_{\mathrm{CV}}(\lambda, \text{tipo}) \;=\; \frac{1}{K}\sum_{k=1}^{K} \mathrm{AUC}\!\left(\hat{\mathbf{w}}_{\lambda,\,\text{tipo}}^{(-k)},\; \mathcal{D}_k\right)
+\end{equation}
+
+donde $\hat{\mathbf{w}}^{(-k)}$ es el modelo entrenado sin el pliegue $k$ y evaluado sobre $\mathcal{D}_k$. Se recorre una grilla de 15 valores de $C = 1/\lambda$ en escala logarítmica $[10^{-3}, 10^{2}]$ para tres tipos de penalización (L1, L2, Elastic-Net), totalizando \textbf{45 problemas interiores} de optimización convexa.
+
+\subsubsection{SVM — Búsqueda en grilla $(C, \gamma)$}
+
+Para el SVM se fija la misma métrica de validación cruzada y se barre la grilla:
+
+\begin{equation}
+\{C\} \times \{\gamma\} = \{0.1,\; 1,\; 10,\; 100\} \times \{0.001,\; 0.01,\; 0.1,\; 1\}
+\end{equation}
+
+para un total de \textbf{16 configuraciones}, lo que genera 80 problemas duales QP (5 pliegues por configuración). La selección del óptimo $(C^*, \gamma^*)$ se guía por la función objetivo exterior:
+
+\begin{equation}
+(C^*,\gamma^*) = \arg\max_{C,\gamma} \;\mathcal{L}_{\mathrm{CV}}(C, \gamma)
+\end{equation}
+
+El parámetro $C$ actúa directamente como la cota de los multiplicadores de Lagrange en el dual ($0 \leq \alpha_i \leq C$), conectando la búsqueda de hiperparámetros con la teoría de dualidad del curso.
+
+\subsection{Ruta de regularización — Regresión Logística}
+
+Se barrieron 15 valores de $C \in [10^{-3}, 10^{2}]$ para las tres penalizaciones (L1, L2, Elastic-Net con $\rho = 0.5$), evaluando AUC-ROC y F1-score mediante validación cruzada estratificada de 5 pliegues. Los resultados óptimos por tipo de penalización fueron:
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Penalización} & \textbf{$C^*$} & \textbf{$\lambda^* = 1/C^*$} & \textbf{AUC-ROC CV} & \textbf{F1 CV} \\
+\midrule
+L2 (Ridge)              & 19.307 & 0.0518 & $0.8462 \pm 0.0128$ & $0.6274 \pm 0.0239$ \\
+L1 (Lasso)              & 43.940 & 0.0228 & $0.8462 \pm 0.0128$ & $0.6267 \pm 0.0239$ \\
+Elastic-Net ($\rho=0.5$)& 43.940 & 0.0228 & $0.8462 \pm 0.0128$ & $0.6267 \pm 0.0239$ \\
+\midrule
+\multicolumn{5}{l}{\small Línea base LR (L2, $C=1.0$): AUC-ROC CV $= 0.8459$, \quad F1 CV $= 0.6296$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Interpretación de la ruta de regularización.}
+
+La ruta de regularización revela el comportamiento de cada tipo de penalización en función de la intensidad de regularización $\lambda = 1/C$:
+
+\begin{itemize}
+    \item \textbf{Zona de alta regularización ($C < 0.1$, $\lambda > 10$):} todos los modelos degradan su desempeño porque los coeficientes son forzados excesivamente hacia cero. La L1 cae más abruptamente porque la esparsidad extrema elimina predictores relevantes.
+    \item \textbf{Zona óptima:} cada penalización alcanza su máximo AUC en un valor diferente de $C$, confirmando que el hiperparámetro óptimo depende del tipo de regularización.
+    \item \textbf{Zona de baja regularización ($C > 10$, $\lambda < 0.1$):} las curvas tienden a estabilizarse o descender ligeramente por sobreajuste. La L2 es la más estable gracias a su penalización suave y diferenciable.
+\end{itemize}
+
+\begin{center}
+\begin{tabular}{llll}
+\toprule
+\textbf{Penalización} & \textbf{Convergencia} & \textbf{Estabilidad en zona plana} & \textbf{Mejor para} \\
+\midrule
+L2            & Suave y continua      & Alta        & Coeficientes correlacionados \\
+L1            & Escalonada (esparsidad) & Media     & Selección automática de variables \\
+Elastic-Net   & Intermedia            & Media-alta  & Combinación de ambas situaciones \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El modelo base (L2, $C=1$) se encuentra dentro o cerca de la zona óptima para L2, lo que explica por qué la mejora esperada es moderada.
+
+\subsection{Optimización de SVM — Búsqueda en grilla $(C, \gamma)$}
+
+Se exploró sistemáticamente la grilla $\{0.1,\,1,\,10,\,100\} \times \{0.001,\,0.01,\,0.1,\,1\}$ mediante validación cruzada estratificada de 5 pliegues. La mejor configuración encontrada fue $C^* = 100$, $\gamma^* = 0.001$, con los siguientes resultados:
+
+\begin{center}
+\begin{tabular}{lllll}
+\toprule
+\textbf{Configuración} & \textbf{$C$} & \textbf{$\gamma$} & \textbf{AUC-ROC CV} & \textbf{F1 CV} \\
+\midrule
+SVM base    & 1   & \texttt{scale} & 0.8283 & 0.6230 \\
+\textbf{SVM óptimo} & \textbf{100} & \textbf{0.001} & \textbf{0.8428} & 0.5998 \\
+\midrule
+\multicolumn{3}{l}{Mejora en AUC-ROC (CV):} & \multicolumn{2}{l}{$+0.0145$} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+El mapa de calor completo de la grilla $(C, \gamma)$ revela las siguientes interacciones:
+
+\begin{itemize}
+    \item \textbf{Efecto de $C$ (columnas):} $C$ pequeño (0.1) genera sub-ajuste, con $\alpha_i \leq 0.1$ y margen muy amplio; $C$ grande (100) reduce las violaciones y aumenta la flexibilidad. El máximo AUC se localiza en $C = 100$ para todos los valores de $\gamma$ pequeños.
+    \item \textbf{Efecto de $\gamma$ (filas):} $\gamma$ pequeño (0.001) produce un kernel plano con fronteras suaves, mientras que $\gamma = 1$ localiza la influencia de cada punto generando fronteras irregulares que sobre-ajustan.
+    \item \textbf{Interacción $(C, \gamma)$:} ambos parámetros deben ajustarse conjuntamente; optimizar uno solo puede llevar a un falso óptimo local.
+\end{itemize}
+
+\subsection{Comparativa final — Base vs Optimizado}
+
+Se evaluaron los cuatro modelos en validación cruzada y en el conjunto de prueba independiente:
+
+\begin{center}
+\begin{tabular}{llllll}
+\toprule
+\textbf{Modelo} & \textbf{Configuración} & \textbf{AUC CV} & \textbf{F1 CV} & \textbf{AUC Test} & \textbf{F1 Test} \\
+\midrule
+LR base           & L2, $C=1$                           & 0.8459 & 0.6296 & 0.8417 & 0.6136 \\
+\textbf{LR óptimo}  & \textbf{L2, $C=19.31$}              & \textbf{0.8462} & 0.6274 & 0.8406 & 0.6136 \\
+SVM base          & RBF, $C=1$, $\gamma=\texttt{scale}$ & 0.8283 & 0.6230 & 0.8248 & 0.6200 \\
+\textbf{SVM óptimo} & $\mathbf{C=100}$, $\boldsymbol{\gamma=0.001}$ & \textbf{0.8428} & 0.5998 & \textbf{0.8310} & 0.5876 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Hallazgos principales.}
+
+\begin{enumerate}
+    \item \textbf{Regresión Logística — mejora marginal:} El modelo base con L2 y $C=1$ ya se encontraba en la zona óptima de la ruta de regularización. La búsqueda identifica $C^* = 19.31$ con una ganancia de $+0.0003$ en AUC CV que no se transfiere al conjunto de prueba ($-0.0011$), indicando que la diferencia está dentro del ruido estadístico. La meseta es amplia y todas las penalizaciones convergen al mismo óptimo.
+
+    \item \textbf{SVM — mejora sustancial en AUC:} La optimización de $(C, \gamma)$ produce la mayor ganancia: el AUC-ROC en CV mejora $+0.0145$ (de 0.8283 a 0.8428), y en prueba $+0.0062$ (de 0.8248 a 0.8310). El valor óptimo $C=100$ (gran cota dual) elimina el exceso de regularización que causaba el 53.8\,\% de vectores de soporte en el modelo base.
+
+    \item \textbf{Trade-off AUC vs F1 en el SVM:} El óptimo para AUC ($C=100$, $\gamma=0.001$) difiere del óptimo para F1 ($C \approx 1$, $\gamma \approx 0.01$). El kernel RBF con $\gamma$ pequeño y $C$ alto produce una frontera suave que maximiza el AUC global, pero es menos agresiva sobre la clase minoritaria. La elección del hiperparámetro a optimizar debe depender del objetivo de negocio.
+
+    \item \textbf{Conexión con el curso:}
+    \begin{itemize}
+        \item \textbf{Regularización L1/L2/Elastic-Net:} la ruta de regularización implementa directamente la teoría: cada punto de la curva resuelve un problema de minimización convexo con diferente $\lambda = 1/C$, revelando el balance sesgo-varianza como función continua del hiperparámetro.
+        \item \textbf{Dualidad y condiciones KKT:} en el SVM, $C$ es la cota explícita de los multiplicadores de Lagrange duales $\alpha_i \in [0, C]$. Al variar $C$ en la grilla, se explora el espectro de holgura en las condiciones de complementariedad: $\alpha_i \cdot \bigl[y_i(f(\mathbf{x}_i)+b) - 1 + \xi_i\bigr] = 0$.
+    \end{itemize}
+\end{enumerate}
+
 \bibliographystyle{apalike}
 \bibliography{../bibliografias}
 
