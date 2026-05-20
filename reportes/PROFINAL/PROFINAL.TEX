@@ -274,7 +274,246 @@ F1-score & 0.6298 & $\pm$\,0.0220 \\
 Un AUC-ROC de 0.8454 indica que el modelo discrimina correctamente en el 84.5\,\% de los pares aleatorios. La desviación estándar baja en ambas métricas confirma que el desempeño es estable entre particiones. Estos valores constituyen la \textbf{línea base} contra la que se compararán los modelos optimizados; una mejora genuina deberá superar estos valores fuera del rango de $\pm 1$ desviación estándar.
 
 
+
+
+\section{Modelo predictivo SVM}
+
+\subsection{Planteamiento del problema de optimización}
+
+\subsubsection{Del Perceptrón a la SVM}
+
+La \textbf{Máquina de Soporte Vectorial} (\textit{Support Vector Machine}, SVM) es el sucesor conceptual del Perceptrón de Rosenblatt (1958). Ambos modelos buscan un hiperplano que separe las dos clases en el espacio de características, pero con objetivos fundamentalmente distintos.
+
+El Perceptrón aplica la regla de actualización
+\begin{equation}
+\mathbf{w} \leftarrow \mathbf{w} + \eta\, y_i \mathbf{x}_i \quad \text{para cada ejemplo } i \text{ mal clasificado,}
+\end{equation}
+donde $\eta > 0$ es la tasa de aprendizaje. Este proceso desciende por el gradiente de la pérdida cero-uno sobre el ejemplo mal clasificado, pero no tiene en cuenta la geometría global: puede producir un hiperplano con margen arbitrariamente pequeño, frágil ante perturbaciones en los datos de prueba. Si los datos no son linealmente separables el algoritmo directamente diverge.
+
+La SVM corrige esto maximizando el \textbf{margen geométrico} $\rho = 2/\|\mathbf{w}\|$, que es la anchura de la franja libre de ejemplos a ambos lados del hiperplano. La diferencia de función de pérdida es clave: el Perceptrón usa la pérdida cero-uno $\ell = \mathbf{1}[y_i f_i \leq 0]$ (no convexa, no diferenciable), mientras que la SVM usa la \textit{hinge loss} $\ell = \max(0,\, 1 - y_i f_i)$ (convexa, diferenciable casi en todo punto), lo que hace el problema de optimización tratable con herramientas de programación convexa.
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Aspecto} & \textbf{Perceptrón} & \textbf{SVM} \\
+\midrule
+Objetivo          & Cualquier hiperplano separador              & Hiperplano de máximo margen (único) \\
+Criterio de parada & Sin errores en entrenamiento               & Optimalidad global (PQ convexa) \\
+Datos no separables & Diverge                                  & Resuelto con holgura $\xi_i$ \\
+Función de pérdida  & Cero-uno (no convexa)                    & \textit{Hinge loss} (convexa) \\
+Generalización      & Sin garantías teóricas                   & Cota VC minimizada \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsubsection{Problema de optimización: SVM de margen suave}
+
+Para datos no separables linealmente se introduce la \textbf{variable de holgura} $\xi_i \geq 0$, que mide cuánto viola el punto $i$ el margen requerido. El problema de optimización primal es:
+
+\begin{equation}
+\min_{\mathbf{w},\, b,\, \boldsymbol{\xi}} \quad \frac{1}{2}\|\mathbf{w}\|_2^2 + C \sum_{i=1}^{n} \xi_i
+\end{equation}
+
+sujeto a:
+\begin{equation}
+y_i\bigl(\mathbf{w}^T \mathbf{x}_i + b\bigr) \geq 1 - \xi_i, \qquad \xi_i \geq 0 \qquad \forall\, i = 1, \ldots, n
+\end{equation}
+
+donde $\mathbf{w} \in \mathbb{R}^d$ es el vector normal al hiperplano (su norma determina el ancho del margen: $\rho = 2/\|\mathbf{w}\|$); $b \in \mathbb{R}$ es el sesgo; $C > 0$ controla el balance entre margen máximo y penalización de violaciones; y $\xi_i$ vale 0 para puntos correctamente clasificados fuera del margen, $0 < \xi_i \leq 1$ para puntos dentro del margen pero correctamente clasificados, y $\xi_i > 1$ para puntos mal clasificados. El parámetro $C$ tiene el mismo rol que en \texttt{LogisticRegression} de sklearn: $C = 1/\lambda$ es el inverso de la regularización.
+
+\subsubsection{El mapa de características $\phi(\mathbf{x})$ y el truco del kernel}
+
+El clasificador lineal en $\mathbb{R}^d$ solo puede aprender fronteras lineales. La solución es proyectar los datos a un espacio de mayor dimensión mediante el \textbf{mapa de características}:
+\begin{equation}
+\phi: \mathbb{R}^d \longrightarrow \mathcal{H}
+\end{equation}
+donde $\mathcal{H}$ es el espacio transformado (posiblemente de dimensión infinita). La motivación teórica proviene del \textbf{teorema de Cover (1965)}: un problema de clasificación complejo proyectado a un espacio de alta dimensión tiene mayor probabilidad de ser linealmente separable.
+
+\paragraph{Ejemplo explícito con kernel polinomial de grado 2 ($d=2$).} Dados $\mathbf{x} = (x_1, x_2)$:
+\begin{equation}
+K(\mathbf{x}, \mathbf{z}) = (\mathbf{x}^T \mathbf{z})^2 = x_1^2 z_1^2 + x_2^2 z_2^2 + 2 x_1 x_2 z_1 z_2 = \phi(\mathbf{x})^T\phi(\mathbf{z})
+\end{equation}
+con $\phi(\mathbf{x}) = (x_1^2,\; x_2^2,\; \sqrt{2}\, x_1 x_2) \in \mathbb{R}^3$. El kernel calcula el producto interno en $\mathbb{R}^3$ \emph{sin computar $\phi$ explícitamente}.
+
+\paragraph{Kernel RBF ($\phi$ de dimensión infinita).} El kernel gaussiano o de base radial es:
+\begin{equation}
+K(\mathbf{x}_i, \mathbf{x}_j) = \exp\!\left(-\gamma \|\mathbf{x}_i - \mathbf{x}_j\|^2\right)
+\end{equation}
+donde $\gamma$ controla el alcance de la influencia de cada punto ($\gamma$ grande → zonas de decisión locales; $\gamma$ pequeño → fronteras suaves). Con \texttt{gamma='scale'}, sklearn usa $\gamma = 1/(d \cdot \mathrm{Var}(X))$. Via la expansión en serie de Taylor de la exponencial se puede demostrar que $\phi$ construye \emph{todas} las características polinomiales de todos los grados, por lo que $\mathcal{H}$ es de dimensión infinita: la SVM con kernel RBF tiene capacidad representativa ilimitada.
+
+\subsubsection{El espacio transformado: RKHS y teorema de Mercer}
+
+El espacio $\mathcal{H}$ es un \textbf{Espacio de Hilbert con Kernel Reproductor} (\textit{Reproducing Kernel Hilbert Space}, RKHS): un espacio vectorial de funciones dotado de un producto interno $\langle\cdot,\cdot\rangle_\mathcal{H}$ que satisface $K(\mathbf{x}_i, \mathbf{x}_j) = \langle\phi(\mathbf{x}_i), \phi(\mathbf{x}_j)\rangle_\mathcal{H}$.
+
+El \textbf{teorema de Mercer} garantiza que toda función $K$ simétrica ($K(\mathbf{x},\mathbf{z}) = K(\mathbf{z},\mathbf{x})$) y semidefinida positiva ($\sum_{i,j} c_i c_j K(\mathbf{x}_i,\mathbf{x}_j) \geq 0$) puede expresarse como:
+\begin{equation}
+K(\mathbf{x}, \mathbf{z}) = \sum_{k=1}^{\infty} \lambda_k \, \psi_k(\mathbf{x})\, \psi_k(\mathbf{z}), \quad \lambda_k \geq 0,
+\end{equation}
+confirmando que $\phi(\mathbf{x}) = (\sqrt{\lambda_1}\psi_1(\mathbf{x}),\, \sqrt{\lambda_2}\psi_2(\mathbf{x}), \ldots)$. El kernel RBF y el kernel lineal son ambos semidefinidos positivos, por lo que el teorema aplica a los dos.
+
+\subsubsection{Derivación de la formulación dual}
+
+La formulación dual transforma el problema primal (en términos de $\mathbf{w}, b, \boldsymbol{\xi}$) en un problema en términos de los \textbf{multiplicadores de Lagrange} $\alpha_i$, uno por ejemplo. Esta transformación introduce el kernel de forma natural.
+
+\paragraph{Paso 1 — Lagrangiano.} Se introduce $\alpha_i \geq 0$ para la restricción de margen de cada punto $i$, y $\mu_i \geq 0$ para $\xi_i \geq 0$:
+\begin{equation}
+\mathcal{L} = \frac{1}{2}\|\mathbf{w}\|^2 + C\sum_{i}\xi_i - \sum_{i}\alpha_i\bigl[y_i(\mathbf{w}^T\mathbf{x}_i + b) - 1 + \xi_i\bigr] - \sum_{i}\mu_i\xi_i
+\end{equation}
+
+\paragraph{Paso 2 — Condiciones KKT de estacionariedad.}
+\begin{align}
+\frac{\partial\mathcal{L}}{\partial\mathbf{w}} = \mathbf{0} &\implies \mathbf{w} = \sum_{i=1}^{n}\alpha_i y_i \mathbf{x}_i \label{eq:w} \\
+\frac{\partial\mathcal{L}}{\partial b} = 0 &\implies \sum_{i=1}^{n}\alpha_i y_i = 0 \label{eq:b} \\
+\frac{\partial\mathcal{L}}{\partial\xi_i} = 0 &\implies \mu_i = C - \alpha_i \implies 0 \leq \alpha_i \leq C \label{eq:xi}
+\end{align}
+
+\paragraph{Paso 3 — Sustitución en el Lagrangiano.} Usando (\ref{eq:w}) y (\ref{eq:b}):
+\begin{itemize}
+    \item $\frac{1}{2}\|\mathbf{w}\|^2 = \frac{1}{2}\sum_{i,j}\alpha_i\alpha_j y_i y_j\,\mathbf{x}_i^T\mathbf{x}_j$
+    \item $\sum_i\alpha_i y_i(\mathbf{w}^T\mathbf{x}_i) = \sum_{i,j}\alpha_i\alpha_j y_i y_j\,\mathbf{x}_i^T\mathbf{x}_j$
+    \item $b\sum_i\alpha_i y_i = 0$ (por (\ref{eq:b}))
+    \item $\sum_i(C - \alpha_i - \mu_i)\xi_i = 0$ (por (\ref{eq:xi}))
+\end{itemize}
+El Lagrangiano simplificado da el problema dual:
+
+\paragraph{Paso 4 — Problema dual con kernel.} Reemplazando $\mathbf{x}_i^T\mathbf{x}_j$ por $K(\mathbf{x}_i,\mathbf{x}_j)$:
+\begin{equation}
+\max_{\boldsymbol{\alpha}} \quad \sum_{i=1}^{n}\alpha_i - \frac{1}{2}\sum_{i=1}^{n}\sum_{j=1}^{n}\alpha_i\alpha_j y_i y_j\, K(\mathbf{x}_i,\mathbf{x}_j)
+\end{equation}
+\begin{equation*}
+\text{s.a.} \quad 0 \leq \alpha_i \leq C, \qquad \sum_{i=1}^{n}\alpha_i y_i = 0
+\end{equation*}
+
+El significado de cada elemento es:
+
+\begin{center}
+\begin{tabular}{lll}
+\toprule
+\textbf{Símbolo} & \textbf{Tipo} & \textbf{Significado} \\
+\midrule
+$\alpha_i \in [0,C]$ & variable de opt. & Peso del punto $i$; $\alpha_i>0$ sii punto $i$ es vector de soporte \\
+$y_i \in \{-1,+1\}$ & dato & Etiqueta de clase \\
+$K(\mathbf{x}_i,\mathbf{x}_j)$ & función & Similaridad implícita en $\mathcal{H}$; reemplaza $\mathbf{x}_i^T\mathbf{x}_j$ \\
+$\sum_i\alpha_i$ & término lineal & Favorece $\alpha_i$ grandes (mayor contribución al margen) \\
+$\frac{1}{2}\sum_{ij}\alpha_i\alpha_j y_i y_j K_{ij}$ & término cuadrático & Penaliza pares similares de la misma clase en conflicto \\
+$\sum_i\alpha_i y_i = 0$ & restricción lineal & Hiperplano balanceado entre clases \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Una vez resuelto, la función de decisión para un nuevo punto $\mathbf{x}$ es:
+\begin{equation}
+f(\mathbf{x}) = \mathrm{sgn}\!\left(\sum_{i=1}^{n}\alpha_i y_i K(\mathbf{x}_i,\mathbf{x}) + b\right),
+\end{equation}
+donde la suma es efectivamente sobre los vectores de soporte ($\alpha_i > 0$) y $b$ se obtiene de las condiciones de complementariedad KKT. La ventaja fundamental de la dualidad es que el problema dual tiene $n$ variables (independiente de $d$), por lo que es factible usar kernels de dimensión infinita sin computar $\phi$ explícitamente.
+
+\subsubsection{Algoritmo SMO}
+
+\texttt{sklearn} resuelve el problema dual con el algoritmo \textbf{SMO} (\textit{Sequential Minimal Optimization}): descompone el programa cuadrático en subproblemas de \textbf{dos variables} $(\alpha_i, \alpha_j)$ a la vez que, dado que $\sum_k\alpha_k y_k = 0$, pueden resolverse analíticamente en forma cerrada. El algoritmo itera eligiendo el par que más viola las condiciones KKT hasta convergencia global.
+
+\subsection{Implementación}
+
+El preprocesamiento (one-hot encoding, división 80/20 estratificada, estandarización de columnas numéricas) es idéntico al de la regresión logística: se reutilizaron los mismos conjuntos \texttt{X\_train}, \texttt{X\_test}, \texttt{y\_train} e \texttt{y\_test} generados en la sección anterior, garantizando una comparación justa entre modelos.
+
+\subsubsection{Modelo inicial SVM (kernel RBF, $C=1$)}
+
+Se ajustó un primer modelo SVM con kernel RBF, $C=1$ (valor predeterminado de sklearn), \texttt{gamma='scale'} ($\gamma = 1/(d\cdot\mathrm{Var}(X))$) y \texttt{class\_weight='balanced'}, en las mismas condiciones que el modelo logístico base. Los resultados en el conjunto de prueba fueron:
+
+\begin{center}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Clase} & \textbf{Precision} & \textbf{Recall} & \textbf{F1-score} & \textbf{Support} \\
+\midrule
+Retenido  & 0.9025 & 0.7333 & 0.8092 & 1\,035 \\
+Abandona  & 0.5141 & 0.7807 & 0.6200 &   374 \\
+\midrule
+Accuracy  & \multicolumn{3}{c}{0.7459} & 1\,409 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{AUC-ROC: 0.8248.} Vectores de soporte: 3\,030 de 5\,634 (53.8\,\% del conjunto de entrenamiento).
+
+\subsubsection{Evaluación del modelo base}
+
+\paragraph{Clase ``Abandona'' (clase de interés).}
+
+\begin{itemize}
+    \item \textbf{Recall = 0.7807:} El SVM detecta el 78.1\,\% de los clientes que realmente abandonan; deja sin detectar el 21.9\,\% restante. Es la métrica de mayor peso de negocio.
+    \item \textbf{Precision = 0.5141:} De cada 10 alarmas de churn, algo más de 5 son correctas; las otras ~5 son falsas alarmas. El valor bajo es consecuencia de \texttt{class\_weight='balanced'}: el modelo sacrifica precisión para maximizar el recall.
+    \item \textbf{F1 = 0.6200:} Balance razonable para una clase con 26.5\,\% de prevalencia.
+\end{itemize}
+
+\paragraph{Matriz de confusión.}
+
+\begin{center}
+\begin{tabular}{lcc}
+\toprule
+ & \textbf{Predicho: Retenido} & \textbf{Predicho: Abandona} \\
+\midrule
+\textbf{Real: Retenido} & VN = 759 & FP = 276 \\
+\textbf{Real: Abandona} & FN = 82  & VP = 292 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+A umbral 0.5, el SVM genera 3.4 veces más falsas alarmas (276 FP) que abandonos no detectados (82 FN). Si el costo de un FN supera al de un FP —habitual en retención de clientes— reducir el umbral de decisión a $\approx 0.3$ aumentaría el recall a costa de más FP, lo que puede ser más rentable.
+
+\paragraph{Curva ROC.} El AUC del SVM RBF (0.8248) es inferior al de la regresión logística (0.8417), con una diferencia de $-0.0169$. La curva de la LR se sitúa por encima en la mayor parte del recorrido. Esto indica que con hiperparámetros predeterminados el SVM no supera a la LR en este dataset: las relaciones dominantes son en su mayoría \textbf{lineales} (tipo de contrato, servicio de internet, cargos), y el kernel RBF con $\gamma=\texttt{scale}$ modela la similitud de forma demasiado local. La optimización de $C$ y $\gamma$ es necesaria para aprovechar la capacidad no lineal del SVM.
+
+\paragraph{Vectores de soporte (53.8\,\%).} El alto porcentaje de vectores de soporte indica que el SVM está \textbf{sobreregularizado} con $C=1$: el margen es tan amplio que acepta muchas violaciones, usando más de la mitad del conjunto de entrenamiento para definir el hiperplano.
+
+\subsubsection{Interpretación de pesos: SVM lineal}
+
+El kernel RBF no produce coeficientes interpretables en el espacio original. Para obtenerlos se entrenó un SVM con kernel lineal ($K(\mathbf{x}_i,\mathbf{x}_j) = \mathbf{x}_i^T\mathbf{x}_j$, $C=1$, \texttt{class\_weight='balanced'}), que expone directamente el vector $\mathbf{w}$ del hiperplano de separación. Los 5 pesos de mayor magnitud absoluta fueron:
+
+\begin{center}
+\begin{tabular}{lrl}
+\toprule
+\textbf{Característica} & \textbf{Peso $w_j$} & \textbf{Interpretación} \\
+\midrule
+\textit{Contract\_Two year}                     & $-1.9996$ & Contrato bienal reduce fuertemente el riesgo de churn \\
+\textit{Contract\_One year}                     & $-1.9996$ & Contrato anual reduce fuertemente el riesgo de churn \\
+\textit{DeviceProtection\_No internet service}  & $-0.2861$ & Sin internet (solo telefonía) → cliente estable \\
+\textit{OnlineBackup\_No internet service}      & $-0.2861$ & Ídem \\
+\textit{InternetService\_No}                    & $-0.2861$ & Sin servicio de internet → menor riesgo de abandono \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Todos los pesos de mayor magnitud son negativos, lo que indica que las variables más informativas son aquellas que \textbf{reducen} el riesgo de churn. El tipo de contrato domina con $|w_j| \approx 2.0$: los clientes en contratos de uno o dos años tienen compromisos que los retienen. Los clientes sin servicio de internet, que solo usan telefonía básica, también muestran menor propensión al abandono.
+
+La comparación de F1 en el conjunto de prueba entre kernels fue: SVM lineal = 0.5876 vs SVM RBF = 0.6200. El kernel RBF mejora en 0.032 puntos de F1 al capturar interacciones no lineales entre las características, aunque a costa de interpretabilidad.
+
+\subsubsection{Validación cruzada}
+
+Se realizó la misma validación cruzada estratificada de 5 pliegues sobre el conjunto de entrenamiento, usando la misma partición \texttt{cv} aplicada a la regresión logística:
+
+\begin{center}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Métrica} & \textbf{SVM RBF} & \textbf{Regresión Logística} & \textbf{Diferencia} \\
+\midrule
+AUC-ROC  & $0.8283 \pm 0.0103$ & $0.8454 \pm 0.0126$ & $-0.0171$ \\
+F1-score & $0.6230 \pm 0.0251$ & $0.6298 \pm 0.0220$ & $-0.0068$ \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\paragraph{Interpretación.}
+
+\begin{itemize}
+    \item \textbf{AUC-ROC (–0.0171):} La diferencia supera la desviación estándar del SVM ($\pm 0.0103$), por lo que no es atribuible a variabilidad aleatoria entre pliegues; es una señal real de que $C=1$ y $\gamma=\texttt{scale}$ no son óptimos.
+    \item \textbf{F1-score (–0.0068):} La brecha cae dentro de $\pm 1\sigma$ de ambos modelos, lo que indica que en la \emph{detección de abandonos} los dos modelos son prácticamente equivalentes con parámetros predeterminados.
+    \item \textbf{Estabilidad:} El SVM es marginalmente más estable en AUC ($\pm 0.0103$ vs $\pm 0.0126$) pero más variable en F1 ($\pm 0.0251$ vs $\pm 0.0220$), lo que sugiere que su frontera de decisión es más sensible a la composición de cada pliegue.
+\end{itemize}
+
+El diagnóstico conjunto —AUC inferior a LR tanto en prueba como en validación cruzada, más el 53.8\,\% de vectores de soporte— confirma que el SVM está sobreregularizado. Estos resultados constituyen la \textbf{línea base SVM} para la optimización de hiperparámetros: AUC-ROC $= 0.8283 \pm 0.0103$, F1 $= 0.6230 \pm 0.0251$. Una mejora genuina deberá superar los umbrales $\mathrm{AUC} > 0.8386$ y $\mathrm{F1} > 0.6481$ (media $+ 1\sigma$).
+
+
 \bibliographystyle{apalike}
 \bibliography{../bibliografias}
+
+
 
 \end{document}

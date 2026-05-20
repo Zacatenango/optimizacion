@@ -31,6 +31,34 @@
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.1}Preprocesamiento}{6}{subsubsection.4.2.1}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.2}Modelo inicial y el solver L-BFGS}{7}{subsubsection.4.2.2}\protected@file@percent }
 \@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.3}Evaluación del modelo base}{7}{subsubsection.4.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Validación cruzada del modelo base}{8}{subsubsection.4.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {5}Modelo predictivo SVM}{8}{section.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.1}Planteamiento del problema de optimización}{8}{subsection.5.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.1}Del Perceptrón a la SVM}{8}{subsubsection.5.1.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.2}Problema de optimización: SVM de margen suave}{9}{subsubsection.5.1.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.3}El mapa de características $\phi (\mathbf  {x})$ y el truco del kernel}{10}{subsubsection.5.1.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Ejemplo explícito con kernel polinomial de grado 2 ($d=2$).}{10}{section*.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Kernel RBF ($\phi $ de dimensión infinita).}{10}{section*.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.4}El espacio transformado: RKHS y teorema de Mercer}{10}{subsubsection.5.1.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.5}Derivación de la formulación dual}{11}{subsubsection.5.1.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Paso 1 — Lagrangiano.}{11}{section*.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Paso 2 — Condiciones KKT de estacionariedad.}{11}{section*.7}\protected@file@percent }
+\newlabel{eq:w}{{15}{11}{Paso 2 — Condiciones KKT de estacionariedad}{equation.15}{}}
+\newlabel{eq:b}{{16}{11}{Paso 2 — Condiciones KKT de estacionariedad}{equation.16}{}}
+\newlabel{eq:xi}{{17}{11}{Paso 2 — Condiciones KKT de estacionariedad}{equation.17}{}}
+\@writefile{toc}{\contentsline {paragraph}{Paso 3 — Sustitución en el Lagrangiano.}{11}{section*.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Paso 4 — Problema dual con kernel.}{11}{section*.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.1.6}Algoritmo SMO}{12}{subsubsection.5.1.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {5.2}Implementación}{12}{subsection.5.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.1}Modelo inicial SVM (kernel RBF, $C=1$)}{12}{subsubsection.5.2.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.2}Evaluación del modelo base}{13}{subsubsection.5.2.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Clase ``Abandona'' (clase de interés).}{13}{section*.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Matriz de confusión.}{13}{section*.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Curva ROC.}{13}{section*.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Vectores de soporte (53.8\,\%).}{13}{section*.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.3}Interpretación de pesos: SVM lineal}{13}{subsubsection.5.2.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsubsection}{\numberline {5.2.4}Validación cruzada}{14}{subsubsection.5.2.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {paragraph}{Interpretación.}{14}{section*.14}\protected@file@percent }
 \bibstyle{apalike}
 \bibdata{../bibliografias}
 \bibcite{IBMcognos2026}{IBM, 2026}
@@ -38,8 +66,7 @@
 \exsheets@sum@of@points {0}
 \exsheets@sum@of@bonus {0}
 \gdef \numberofquestions {0}
-\@writefile{toc}{\contentsline {subsubsection}{\numberline {4.2.4}Validación cruzada del modelo base}{8}{subsubsection.4.2.4}\protected@file@percent }
-\newlabel{LastPage}{{4.2.4}{8}{Validación cruzada del modelo base}{page.8}{}}
-\gdef\lastpage@lastpage{8}
-\gdef\lastpage@lastpageHy{8}
-\gdef \@abspage@last{8}
+\newlabel{LastPage}{{5.2.4}{15}{Interpretación.}{page.15}{}}
+\gdef\lastpage@lastpage{15}
+\gdef\lastpage@lastpageHy{15}
+\gdef \@abspage@last{15}
